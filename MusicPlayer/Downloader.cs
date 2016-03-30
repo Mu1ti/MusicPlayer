@@ -36,7 +36,7 @@ namespace MusicPlayer
 
                 audioDownloader.Execute();
 
-                if (video.Title.Contains(" - ")) MainForm.YoutubeResult[index, 2] = video.Title.Split('-')[0];
+                //if (video.Title.Contains(" - ")) MainForm.YoutubeResult[index, 2] = video.Title.Split('-')[0];
 
                 //MP3Tag.TagThis(MainForm.YoutubeResult[index,2],,MainForm.YoutubeResult[index,0])
                 return true;

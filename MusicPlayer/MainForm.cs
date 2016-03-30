@@ -8,11 +8,19 @@ namespace MusicPlayer
 {
     public partial class MainForm : Form
     {
+        /*
+            음악 정보 변수
+            1. Title
+            2. Artist
+            3. Album
+            4. AlbumURL
+            5. URL
+        */
         private Panel[] MusicItemPanel = new Panel[256];
         private PictureBox[] AlbumePicture = new PictureBox[256];
         private Label[] MusicInformationLabel = new Label[256];
         private TextBox[] MusicInformationText = new TextBox[256];
-        public static string[,] YoutubeResult;
+        public static string[,] MusicInformation;
         int ListCount = 0;
 
         public MainForm()
@@ -26,7 +34,7 @@ namespace MusicPlayer
             MusicListPanel.MouseWheel += new MouseEventHandler(Scrolled);
         }
         
-        private bool CreateMusicItem(string AlbumePath, string Title, string Artist, string Albume, string URL)
+        private bool CreateMusicItem(string Title, string Artist, string Album, string AlbumPath, string URL)
         {
             try
             {
@@ -48,10 +56,10 @@ namespace MusicPlayer
                 AlbumePicture[ListCount].Top = 3;
                 AlbumePicture[ListCount].Width = 100 - 6;
                 AlbumePicture[ListCount].Height = 100 - 6;
-                if (AlbumePath == null) AlbumePicture[ListCount].BackgroundImage = Properties.Resources.NoImage;
+                if (AlbumPath == null) AlbumePicture[ListCount].BackgroundImage = Properties.Resources.NoImage;
                 AlbumePicture[ListCount].BackgroundImageLayout = ImageLayout.Stretch;
                 AlbumePicture[ListCount].Name = " " + ListCount + " ";
-                AlbumePicture[ListCount].Image = Image.FromFile(AlbumePath);
+                AlbumePicture[ListCount].Image = Image.FromFile(AlbumPath);
                 AlbumePicture[ListCount].SizeMode = PictureBoxSizeMode.StretchImage;
                 AlbumePicture[ListCount].Click += new System.EventHandler(DownloadButton);
                 AlbumePicture[ListCount].MouseWheel += new MouseEventHandler(Scrolled);
@@ -72,7 +80,7 @@ namespace MusicPlayer
                 MusicInformationText[ListCount].Height = MusicInformationLabel[ListCount].Height;
                 MusicInformationText[ListCount].Width = MusicItemPanel[ListCount].Width - MusicInformationText[ListCount].Left - 10;
                 MusicInformationText[ListCount].Multiline = true;
-                MusicInformationText[ListCount].Text = Title + "\r\n\r\n" + Artist + "\r\n\r\n" + Albume + "\r\n\r\n" + URL;
+                MusicInformationText[ListCount].Text = Title + "\r\n\r\n" + Artist + "\r\n\r\n" + Album + "\r\n\r\n" + URL;
                 MusicInformationText[ListCount].BorderStyle = BorderStyle.None;
                 MusicInformationText[ListCount].BackColor = MusicItemPanel[ListCount].BackColor;
                 MusicInformationText[ListCount].ReadOnly = true;
@@ -93,11 +101,15 @@ namespace MusicPlayer
         {
             if(SearchText.Text != "Search Here... (~￣▽￣)~")
             {
-                Crawling crawling = new Crawling();
-                //string[,] SoundCloudResult = crawling.SoundCloudCrawling(SearchText.Text);
-
-                /*string[,] */YoutubeResult = crawling.YoutubeCrawling(SearchText.Text);
-                for (int i = 0; (YoutubeResult.Length / 3) > i; i++) CreateMusicItem(YoutubeResult[i,2], YoutubeResult[i,0], "EXAMPLE", "EXAMPLE", YoutubeResult[i,1]);
+                Crawling crawling = new Crawling( );
+                MusicInformation = crawling.CrawlingResult(SearchText.Text);
+                for (int i = 0; (MusicInformation.Length / 5) > i; i++)
+                    CreateMusicItem(
+                        MusicInformation[i,0], 
+                        MusicInformation[i,1],
+                        MusicInformation[i,2],
+                        MusicInformation[i,3],
+                        MusicInformation[i,4]);
                 MusicListBar.Maximum = ListCount;
                 MusicListBar.Value = 0;
             }
@@ -130,6 +142,7 @@ namespace MusicPlayer
 
             Thread Down = new Thread(() => Downloader.YoutubeDownloader(url,".\\Music\\",Index));
             Down.Start();
+
         }
         private void Scrolled(object sender, MouseEventArgs e)
         {

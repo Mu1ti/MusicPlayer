@@ -7,18 +7,31 @@ namespace MusicPlayer
 {
     class Crawling
     {
+        public string[,] CrawlingResult(string KeyWord)
+        {
+            string[,] Result;
+            string[,] YoutubeResult = YoutubeCrawling(KeyWord);
+            string[,] SoundCloudResult = null;
+
+            Result = YoutubeResult;
+
+            return Result;
+        }
+
         public string[,] YoutubeCrawling(string KeyWord)
         {
             /*
                 유튜브 결과
                 1. 노래 이름
                 2. 아티스트
-                3. 앨범 재킷 URL
-                4. URL
+                3. 앨범(모름)
+                4. 앨범 재킷 URL
+                5. URL
             */
             string URL = "https://www.youtube.com/results?search_query=" + System.Web.HttpUtility.UrlEncode(KeyWord);
             string Source = GetSource(URL);
             string[] TitleResult = RegexToStringArr("(?<=dir=\"ltr\">).*(?=<\\/a><sp)", Source);
+            string[] ArtistResult = new string[TitleResult.Length];
             string[] URLResult = RegexToStringArr("(?<=\"yt-lockup-title \"><a href=\").*(?=\" class=\"yt-uix-sessionlink yt)",Source);
             string[] PicResult = RegexToStringArr("((?<=c=\"\\/\\/).*(?=\" alt=\"\" width=))|((?<=\" alt=\"\" data-thumb=\"\\/\\/).*(?=\" w))", Source);
             string[,] Result = new string[TitleResult.Length, 5];
@@ -32,10 +45,23 @@ namespace MusicPlayer
             }
             for (int i = 0; TitleResult.Length > i; i++)
             {
+                if (TitleResult[i].Contains("-"))
+                {
+                    ArtistResult[i] = TitleResult[i].Split('-')[0];
+                    TitleResult[i] = TitleResult[i].Split('-')[1];
+                }
+                else
+                {
+                    ArtistResult[i] = "Unknown";
+                }
+            }
+            for (int i = 0; TitleResult.Length > i; i++)
+            {
                 Result[i, 0] = TitleResult[i];
-
-                Result[i, 1] = URLResult[i];
-                Result[i, 2] = PicResult[i];
+                Result[i, 1] = ArtistResult[i];
+                Result[i, 2] = "Unknown";
+                Result[i, 3] = PicResult[i];
+                Result[i, 4] = URLResult[i];
             }
 
             return Result;
@@ -48,6 +74,7 @@ namespace MusicPlayer
 
             return null;
         }
+
         public static string[] RegexToStringArr(string reg, string str)
         {
             Regex Parsed = new Regex(reg, RegexOptions.IgnoreCase);
