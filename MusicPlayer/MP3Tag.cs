@@ -5,22 +5,17 @@ namespace MusicPlayer
 {
     class MP3Tag
     {
-        public static bool TagThis(string AlbumPath, string Artist, string Title, string Album, string Year, string Track, string Lyricist, string Path)
+        public static bool TagThis(string[] MusicInformation, string Path)
         {
             try
             {
                 ID3v2Tag Information = new ID3v2Tag(Path);
-                Information.Album = Album;
-                Information.Title = Title;
-                Information.Year = Year;
-                Information.TrackNumber = Track;
-                Information.Lyricist = Lyricist;
+                Information.Title = MusicInformation[0];
+                Information.Artist = MusicInformation[1];
+                Information.Album = MusicInformation[2];
+                Information.Lyricist = MusicInformation[3];
+                Information.PictureList[0].Picture = Bitmap.FromFile(MusicInformation[4]);
 
-                //IAttachedPicture picture = Information.PictureList.AddNew();
-
-                //picture.PictureData = File.ReadAllBytes(pictureFileName);
-
-                Information.PictureList[0].Picture = Bitmap.FromFile(AlbumPath);
                 Information.Save(Path);
                 return true;
             }

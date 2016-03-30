@@ -11,6 +11,18 @@ namespace MusicPlayer
 {
     class Downloader
     {
+        public static bool DownLoadThis(string Type, string path, string [,]MusicInformation, int index)
+        {
+            if(Type == "Youtube")
+            {
+            //    YoutubeDownloader(u)
+            }
+            //Thread Down = new Thread(() => Downloader.YoutubeDownloader(url, ".\\Music\\", Index));
+            //if()
+
+            return true;
+        }
+
         public static bool YoutubeDownloader(string url, string path, int index)
         {
             try
@@ -38,7 +50,7 @@ namespace MusicPlayer
 
                 //if (video.Title.Contains(" - ")) MainForm.YoutubeResult[index, 2] = video.Title.Split('-')[0];
 
-                //MP3Tag.TagThis(MainForm.YoutubeResult[index,2],,MainForm.YoutubeResult[index,0])
+                //MP3Tag.TagThis(MainForm.);
                 return true;
             }
             catch(Exception e)
@@ -81,8 +93,8 @@ namespace MusicPlayer
         private static string RemoveIllegalPathCharacters(string path)
         {
             string regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
-            var r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
-            return r.Replace(path, "");
+            var Return = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
+            return Return.Replace(path, "");
         }
     }
 }

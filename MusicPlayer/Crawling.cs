@@ -25,8 +25,9 @@ namespace MusicPlayer
                 1. 노래 이름
                 2. 아티스트
                 3. 앨범(모름)
-                4. 앨범 재킷 URL
-                5. URL
+                4. 가사(모름)
+                5. 앨범 재킷 URL
+                6. URL
             */
             string URL = "https://www.youtube.com/results?search_query=" + System.Web.HttpUtility.UrlEncode(KeyWord);
             string Source = GetSource(URL);
@@ -34,7 +35,7 @@ namespace MusicPlayer
             string[] ArtistResult = new string[TitleResult.Length];
             string[] URLResult = RegexToStringArr("(?<=\"yt-lockup-title \"><a href=\").*(?=\" class=\"yt-uix-sessionlink yt)",Source);
             string[] PicResult = RegexToStringArr("((?<=c=\"\\/\\/).*(?=\" alt=\"\" width=))|((?<=\" alt=\"\" data-thumb=\"\\/\\/).*(?=\" w))", Source);
-            string[,] Result = new string[TitleResult.Length, 5];
+            string[,] Result = new string[TitleResult.Length, 6];
 
             for (int i = 0; URLResult.Length > i; i++) URLResult[i] = "https://www.youtube.com" + URLResult[i];
             for (int i = 0; PicResult.Length > i; i++) PicResult[i] = "https://" + PicResult[i];
@@ -60,8 +61,9 @@ namespace MusicPlayer
                 Result[i, 0] = TitleResult[i];
                 Result[i, 1] = ArtistResult[i];
                 Result[i, 2] = "Unknown";
-                Result[i, 3] = PicResult[i];
-                Result[i, 4] = URLResult[i];
+                Result[i, 3] = "Unknown";
+                Result[i, 4] = PicResult[i];
+                Result[i, 5] = URLResult[i];
             }
 
             return Result;
