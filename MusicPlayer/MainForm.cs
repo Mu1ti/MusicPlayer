@@ -121,7 +121,7 @@ namespace MusicPlayer
 
             MusicListPanel.Left = SearchText.Left;
             MusicListPanel.Width = SearchButton.Left + SearchButton.Width - 13;
-            MusicListPanel.Height = PlayBar.Top - 75;
+            //MusicListPanel.Height = PlayBar.Top - 75;
 
             if(ListCount > 0)
             {
@@ -187,6 +187,6 @@ namespace MusicPlayer
             if(SearchText.Text != null) {if (e.KeyChar == 13) SearchButton_Click(sender, e); }
             
         }
-
+        
     }
 }
