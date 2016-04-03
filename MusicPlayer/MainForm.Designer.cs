@@ -236,10 +236,12 @@
             // 
             this.VolumeBar.AutoSize = false;
             this.VolumeBar.Location = new System.Drawing.Point(638, 23);
+            this.VolumeBar.Maximum = 100;
             this.VolumeBar.Name = "VolumeBar";
             this.VolumeBar.Size = new System.Drawing.Size(145, 28);
             this.VolumeBar.TabIndex = 0;
             this.VolumeBar.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.VolumeBar.Value = 50;
             // 
             // HotKeyPanel
             // 
@@ -423,6 +425,7 @@
             this.PlayIco.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.PlayIco.TabIndex = 0;
             this.PlayIco.TabStop = false;
+            this.PlayIco.Click += new System.EventHandler(this.PlayIco_Click);
             // 
             // MainForm
             // 

@@ -187,6 +187,10 @@ namespace MusicPlayer
             if(SearchText.Text != null) {if (e.KeyChar == 13) SearchButton_Click(sender, e); }
             
         }
-        
+
+        private void PlayIco_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
