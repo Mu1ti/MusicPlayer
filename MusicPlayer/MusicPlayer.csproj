@@ -98,6 +98,45 @@
   <ItemGroup>
     <None Include="NoImage.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="cogwheel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="interface.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="play.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="square.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Again.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="arrows.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="diskette.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="balloon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Next.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Pause.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Start.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Stop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Volume.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
