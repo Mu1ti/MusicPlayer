@@ -116,21 +116,60 @@ namespace MusicPlayer
         }
         private void MainForm_Resize(object sender, EventArgs e)
         {
-            SearchButton.Left = Width - SearchButton.Width - 25;
-            SearchText.Width = SearchButton.Left - 20;
 
+            //*******************************************
+            //*              Panels Resize              *
+            //*******************************************
+            
+            LeftPanel.Width = (int)(Width * 0.1);
+            PlayBar.Left = LeftPanel.Width;
+            PlayBar.Width = Width - PlayBar.Left - 15;
+            PlayBar.Top = Height - PlayBar.Height - 39;
+
+            PlayPanel.Top = 0;
+            PlayPanel.Left = LeftPanel.Width;
+            PlayPanel.Width = Width - PlayPanel.Left - 15;
+            PlayPanel.Height = PlayBar.Top;
+
+            SearchPanel.Top = 0;
+            SearchPanel.Left = LeftPanel.Width;
+            SearchPanel.Width = Width - SearchPanel.Left - 15;
+            SearchPanel.Height = PlayBar.Top;
+
+            SettingPanel.Top = 0;
+            SettingPanel.Left = LeftPanel.Width;
+            SettingPanel.Width = Width - SettingPanel.Left - 15;
+            SettingPanel.Height = PlayBar.Top - 39;
+            
+            PlayListPanel.Top = 0;
+            PlayListPanel.Left = LeftPanel.Width;
+            PlayListPanel.Width = Width - PlayListPanel.Left - 15;
+            PlayListPanel.Height = PlayBar.Top;
+            
+            NowPlayList.Top = SettingIco.Top + SettingIco.Height;
+            NowPlayList.Height = Width - NowPlayList.Top;
+            NowPlayList.Width = LeftPanel.Width;
+
+            //*******************************************
+            //*        PlayPanel Items Resize           *
+            //*******************************************
+
+            //*******************************************
+            //*        SearchPanel Item Resize          *
+            //*******************************************
+
+            SearchText.Left = 0;
+            SearchText.Width = (int)(SearchPanel.Width * 0.9);
+            SearchButton.Left = SearchText.Width;
+            SearchButton.Width = SearchPanel.Width - SearchButton.Left;
+
+            MusicListPanel.Top = SearchText.Height;
             MusicListPanel.Left = SearchText.Left;
-            MusicListPanel.Width = SearchButton.Left + SearchButton.Width - 13;
-            //MusicListPanel.Height = PlayBar.Top - 75;
+            MusicListPanel.Width = SearchPanel.Width;
+            MusicListPanel.Height = PlayBar.Top;
 
-            if(ListCount > 0)
-            {
-                for(int i = 0 ; ListCount > i ; i++)
-                {
-                    MusicItemPanel[i].Width = MusicListBar.Left;
-                    MusicInformationText[i].Width = MusicItemPanel[1].Width - (MusicInformationText[1].Left + 10);
-                }
-            }
+
+
         }
         
         private void DownloadButton(object sender, EventArgs e)
@@ -190,7 +229,20 @@ namespace MusicPlayer
 
         private void PlayIco_Click(object sender, EventArgs e)
         {
+            MainForm_Resize(sender, e);
 
+            SearchPanel.Visible = false;
+            PlayPanel.Visible = true;
+        }
+
+        private void SearchIco_Click(object sender, EventArgs e)
+        {
+            MainForm_Resize(sender, e);
+
+            SearchPanel.Visible = true;
+            PlayPanel.Visible = false;
+
+            
         }
     }
 }

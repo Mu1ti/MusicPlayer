@@ -29,55 +29,55 @@
         private void InitializeComponent()
         {
             this.LeftPanel = new System.Windows.Forms.Panel();
+            this.NowPlayList = new System.Windows.Forms.ListBox();
+            this.SettingIco = new System.Windows.Forms.PictureBox();
+            this.PlayListIco = new System.Windows.Forms.PictureBox();
+            this.SearchIco = new System.Windows.Forms.PictureBox();
+            this.PlayIco = new System.Windows.Forms.PictureBox();
             this.PlayBar = new System.Windows.Forms.Panel();
+            this.NowPlayInformationLabel = new System.Windows.Forms.Label();
+            this.NowPlayInformationText = new System.Windows.Forms.TextBox();
+            this.PlayButton = new System.Windows.Forms.PictureBox();
+            this.StopButton = new System.Windows.Forms.PictureBox();
+            this.NextButton = new System.Windows.Forms.PictureBox();
+            this.VolumeButton = new System.Windows.Forms.PictureBox();
+            this.VolumeBar = new System.Windows.Forms.TrackBar();
             this.SearchPanel = new System.Windows.Forms.Panel();
             this.MusicListPanel = new System.Windows.Forms.Panel();
             this.MusicListBar = new System.Windows.Forms.VScrollBar();
             this.SearchText = new System.Windows.Forms.TextBox();
             this.SearchButton = new System.Windows.Forms.Button();
             this.PlayPanel = new System.Windows.Forms.Panel();
-            this.PlayListPanel = new System.Windows.Forms.Panel();
-            this.SettingPanel = new System.Windows.Forms.Panel();
-            this.YoutubePlayer = new System.Windows.Forms.WebBrowser();
-            this.SoundVisualizer = new System.Windows.Forms.Panel();
-            this.PlayListBar = new System.Windows.Forms.VScrollBar();
-            this.ListPanel = new System.Windows.Forms.Panel();
-            this.NowPlayList = new System.Windows.Forms.ListBox();
-            this.VolumeBar = new System.Windows.Forms.TrackBar();
-            this.HotKeyPanel = new System.Windows.Forms.Panel();
-            this.NowPlayInformationText = new System.Windows.Forms.TextBox();
-            this.NowPlayInformationLabel = new System.Windows.Forms.Label();
             this.LyricistLabel = new System.Windows.Forms.Label();
+            this.PlayAlbumCover = new System.Windows.Forms.PictureBox();
+            this.SoundVisualizer = new System.Windows.Forms.Panel();
+            this.YoutubePlayer = new System.Windows.Forms.WebBrowser();
+            this.PlayListPanel = new System.Windows.Forms.Panel();
+            this.ListPanel = new System.Windows.Forms.Panel();
+            this.PlayListBar = new System.Windows.Forms.VScrollBar();
+            this.SettingPanel = new System.Windows.Forms.Panel();
+            this.HotKeyPanel = new System.Windows.Forms.Panel();
             this.AutoDown = new System.Windows.Forms.CheckBox();
             this.StartAgain = new System.Windows.Forms.CheckBox();
             this.SavePoint = new System.Windows.Forms.CheckBox();
             this.Tray = new System.Windows.Forms.CheckBox();
-            this.PlayAlbumCover = new System.Windows.Forms.PictureBox();
-            this.PlayButton = new System.Windows.Forms.PictureBox();
-            this.StopButton = new System.Windows.Forms.PictureBox();
-            this.NextButton = new System.Windows.Forms.PictureBox();
-            this.VolumeButton = new System.Windows.Forms.PictureBox();
-            this.SettingIco = new System.Windows.Forms.PictureBox();
-            this.PlayListIco = new System.Windows.Forms.PictureBox();
-            this.SearchIco = new System.Windows.Forms.PictureBox();
-            this.PlayIco = new System.Windows.Forms.PictureBox();
             this.LeftPanel.SuspendLayout();
-            this.PlayBar.SuspendLayout();
-            this.SearchPanel.SuspendLayout();
-            this.MusicListPanel.SuspendLayout();
-            this.PlayPanel.SuspendLayout();
-            this.PlayListPanel.SuspendLayout();
-            this.SettingPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.VolumeBar)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.PlayAlbumCover)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.PlayButton)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.StopButton)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.NextButton)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.VolumeButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SettingIco)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PlayListIco)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SearchIco)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PlayIco)).BeginInit();
+            this.PlayBar.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.PlayButton)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.StopButton)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NextButton)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.VolumeButton)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.VolumeBar)).BeginInit();
+            this.SearchPanel.SuspendLayout();
+            this.MusicListPanel.SuspendLayout();
+            this.PlayPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.PlayAlbumCover)).BeginInit();
+            this.PlayListPanel.SuspendLayout();
+            this.SettingPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // LeftPanel
@@ -92,6 +92,62 @@
             this.LeftPanel.Name = "LeftPanel";
             this.LeftPanel.Size = new System.Drawing.Size(98, 599);
             this.LeftPanel.TabIndex = 2;
+            // 
+            // NowPlayList
+            // 
+            this.NowPlayList.FormattingEnabled = true;
+            this.NowPlayList.ItemHeight = 12;
+            this.NowPlayList.Location = new System.Drawing.Point(0, 391);
+            this.NowPlayList.Name = "NowPlayList";
+            this.NowPlayList.Size = new System.Drawing.Size(98, 208);
+            this.NowPlayList.TabIndex = 4;
+            // 
+            // SettingIco
+            // 
+            this.SettingIco.Dock = System.Windows.Forms.DockStyle.Top;
+            this.SettingIco.Image = global::MusicPlayer.Properties.Resources.cogwheel;
+            this.SettingIco.Location = new System.Drawing.Point(0, 294);
+            this.SettingIco.Name = "SettingIco";
+            this.SettingIco.Size = new System.Drawing.Size(98, 98);
+            this.SettingIco.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.SettingIco.TabIndex = 3;
+            this.SettingIco.TabStop = false;
+            // 
+            // PlayListIco
+            // 
+            this.PlayListIco.Dock = System.Windows.Forms.DockStyle.Top;
+            this.PlayListIco.Image = global::MusicPlayer.Properties.Resources._interface;
+            this.PlayListIco.Location = new System.Drawing.Point(0, 196);
+            this.PlayListIco.Name = "PlayListIco";
+            this.PlayListIco.Size = new System.Drawing.Size(98, 98);
+            this.PlayListIco.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.PlayListIco.TabIndex = 2;
+            this.PlayListIco.TabStop = false;
+            // 
+            // SearchIco
+            // 
+            this.SearchIco.Dock = System.Windows.Forms.DockStyle.Top;
+            this.SearchIco.Image = global::MusicPlayer.Properties.Resources.square;
+            this.SearchIco.Location = new System.Drawing.Point(0, 98);
+            this.SearchIco.Name = "SearchIco";
+            this.SearchIco.Size = new System.Drawing.Size(98, 98);
+            this.SearchIco.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.SearchIco.TabIndex = 1;
+            this.SearchIco.TabStop = false;
+            this.SearchIco.Click += new System.EventHandler(this.SearchIco_Click);
+            // 
+            // PlayIco
+            // 
+            this.PlayIco.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.PlayIco.Dock = System.Windows.Forms.DockStyle.Top;
+            this.PlayIco.Image = global::MusicPlayer.Properties.Resources.play;
+            this.PlayIco.Location = new System.Drawing.Point(0, 0);
+            this.PlayIco.Name = "PlayIco";
+            this.PlayIco.Size = new System.Drawing.Size(98, 98);
+            this.PlayIco.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.PlayIco.TabIndex = 0;
+            this.PlayIco.TabStop = false;
+            this.PlayIco.Click += new System.EventHandler(this.PlayIco_Click);
             // 
             // PlayBar
             // 
@@ -108,6 +164,80 @@
             this.PlayBar.Size = new System.Drawing.Size(821, 66);
             this.PlayBar.TabIndex = 6;
             // 
+            // NowPlayInformationLabel
+            // 
+            this.NowPlayInformationLabel.AutoSize = true;
+            this.NowPlayInformationLabel.Font = new System.Drawing.Font("굴림", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.NowPlayInformationLabel.Location = new System.Drawing.Point(4, 6);
+            this.NowPlayInformationLabel.Name = "NowPlayInformationLabel";
+            this.NowPlayInformationLabel.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.NowPlayInformationLabel.Size = new System.Drawing.Size(71, 57);
+            this.NowPlayInformationLabel.TabIndex = 6;
+            this.NowPlayInformationLabel.Text = ": Artist\r\n: Album\r\n: Title";
+            // 
+            // NowPlayInformationText
+            // 
+            this.NowPlayInformationText.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
+            this.NowPlayInformationText.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.NowPlayInformationText.Font = new System.Drawing.Font("굴림", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.NowPlayInformationText.Location = new System.Drawing.Point(79, 5);
+            this.NowPlayInformationText.Multiline = true;
+            this.NowPlayInformationText.Name = "NowPlayInformationText";
+            this.NowPlayInformationText.ReadOnly = true;
+            this.NowPlayInformationText.Size = new System.Drawing.Size(214, 58);
+            this.NowPlayInformationText.TabIndex = 5;
+            // 
+            // PlayButton
+            // 
+            this.PlayButton.Image = global::MusicPlayer.Properties.Resources.Start;
+            this.PlayButton.Location = new System.Drawing.Point(388, 9);
+            this.PlayButton.Name = "PlayButton";
+            this.PlayButton.Size = new System.Drawing.Size(50, 50);
+            this.PlayButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.PlayButton.TabIndex = 4;
+            this.PlayButton.TabStop = false;
+            // 
+            // StopButton
+            // 
+            this.StopButton.Image = global::MusicPlayer.Properties.Resources.Stop;
+            this.StopButton.Location = new System.Drawing.Point(342, 15);
+            this.StopButton.Name = "StopButton";
+            this.StopButton.Size = new System.Drawing.Size(40, 40);
+            this.StopButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.StopButton.TabIndex = 3;
+            this.StopButton.TabStop = false;
+            // 
+            // NextButton
+            // 
+            this.NextButton.Image = global::MusicPlayer.Properties.Resources.Next;
+            this.NextButton.Location = new System.Drawing.Point(444, 15);
+            this.NextButton.Name = "NextButton";
+            this.NextButton.Size = new System.Drawing.Size(40, 40);
+            this.NextButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.NextButton.TabIndex = 2;
+            this.NextButton.TabStop = false;
+            // 
+            // VolumeButton
+            // 
+            this.VolumeButton.Image = global::MusicPlayer.Properties.Resources.Volume;
+            this.VolumeButton.Location = new System.Drawing.Point(605, 20);
+            this.VolumeButton.Name = "VolumeButton";
+            this.VolumeButton.Size = new System.Drawing.Size(28, 28);
+            this.VolumeButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.VolumeButton.TabIndex = 1;
+            this.VolumeButton.TabStop = false;
+            // 
+            // VolumeBar
+            // 
+            this.VolumeBar.AutoSize = false;
+            this.VolumeBar.Location = new System.Drawing.Point(638, 23);
+            this.VolumeBar.Maximum = 100;
+            this.VolumeBar.Name = "VolumeBar";
+            this.VolumeBar.Size = new System.Drawing.Size(145, 28);
+            this.VolumeBar.TabIndex = 0;
+            this.VolumeBar.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.VolumeBar.Value = 50;
+            // 
             // SearchPanel
             // 
             this.SearchPanel.Controls.Add(this.MusicListPanel);
@@ -117,6 +247,7 @@
             this.SearchPanel.Name = "SearchPanel";
             this.SearchPanel.Size = new System.Drawing.Size(415, 262);
             this.SearchPanel.TabIndex = 7;
+            this.SearchPanel.Visible = false;
             // 
             // MusicListPanel
             // 
@@ -167,6 +298,41 @@
             this.PlayPanel.Size = new System.Drawing.Size(405, 261);
             this.PlayPanel.TabIndex = 8;
             // 
+            // LyricistLabel
+            // 
+            this.LyricistLabel.Location = new System.Drawing.Point(193, 135);
+            this.LyricistLabel.Name = "LyricistLabel";
+            this.LyricistLabel.Size = new System.Drawing.Size(212, 126);
+            this.LyricistLabel.TabIndex = 4;
+            this.LyricistLabel.Text = "Lyricist";
+            this.LyricistLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // PlayAlbumCover
+            // 
+            this.PlayAlbumCover.Image = global::MusicPlayer.Properties.Resources.NoImage;
+            this.PlayAlbumCover.Location = new System.Drawing.Point(0, 135);
+            this.PlayAlbumCover.Name = "PlayAlbumCover";
+            this.PlayAlbumCover.Size = new System.Drawing.Size(195, 126);
+            this.PlayAlbumCover.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.PlayAlbumCover.TabIndex = 3;
+            this.PlayAlbumCover.TabStop = false;
+            // 
+            // SoundVisualizer
+            // 
+            this.SoundVisualizer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
+            this.SoundVisualizer.Location = new System.Drawing.Point(195, 0);
+            this.SoundVisualizer.Name = "SoundVisualizer";
+            this.SoundVisualizer.Size = new System.Drawing.Size(210, 135);
+            this.SoundVisualizer.TabIndex = 2;
+            // 
+            // YoutubePlayer
+            // 
+            this.YoutubePlayer.Location = new System.Drawing.Point(0, -1);
+            this.YoutubePlayer.MinimumSize = new System.Drawing.Size(20, 20);
+            this.YoutubePlayer.Name = "YoutubePlayer";
+            this.YoutubePlayer.Size = new System.Drawing.Size(195, 136);
+            this.YoutubePlayer.TabIndex = 0;
+            // 
             // PlayListPanel
             // 
             this.PlayListPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
@@ -176,6 +342,23 @@
             this.PlayListPanel.Name = "PlayListPanel";
             this.PlayListPanel.Size = new System.Drawing.Size(405, 274);
             this.PlayListPanel.TabIndex = 11;
+            this.PlayListPanel.Visible = false;
+            // 
+            // ListPanel
+            // 
+            this.ListPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ListPanel.Location = new System.Drawing.Point(0, 0);
+            this.ListPanel.Name = "ListPanel";
+            this.ListPanel.Size = new System.Drawing.Size(388, 274);
+            this.ListPanel.TabIndex = 1;
+            // 
+            // PlayListBar
+            // 
+            this.PlayListBar.Dock = System.Windows.Forms.DockStyle.Right;
+            this.PlayListBar.Location = new System.Drawing.Point(388, 0);
+            this.PlayListBar.Name = "PlayListBar";
+            this.PlayListBar.Size = new System.Drawing.Size(17, 274);
+            this.PlayListBar.TabIndex = 0;
             // 
             // SettingPanel
             // 
@@ -189,59 +372,7 @@
             this.SettingPanel.Name = "SettingPanel";
             this.SettingPanel.Size = new System.Drawing.Size(415, 272);
             this.SettingPanel.TabIndex = 12;
-            // 
-            // YoutubePlayer
-            // 
-            this.YoutubePlayer.Location = new System.Drawing.Point(0, -1);
-            this.YoutubePlayer.MinimumSize = new System.Drawing.Size(20, 20);
-            this.YoutubePlayer.Name = "YoutubePlayer";
-            this.YoutubePlayer.Size = new System.Drawing.Size(195, 136);
-            this.YoutubePlayer.TabIndex = 0;
-            // 
-            // SoundVisualizer
-            // 
-            this.SoundVisualizer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
-            this.SoundVisualizer.Location = new System.Drawing.Point(195, 0);
-            this.SoundVisualizer.Name = "SoundVisualizer";
-            this.SoundVisualizer.Size = new System.Drawing.Size(210, 135);
-            this.SoundVisualizer.TabIndex = 2;
-            // 
-            // PlayListBar
-            // 
-            this.PlayListBar.Dock = System.Windows.Forms.DockStyle.Right;
-            this.PlayListBar.Location = new System.Drawing.Point(388, 0);
-            this.PlayListBar.Name = "PlayListBar";
-            this.PlayListBar.Size = new System.Drawing.Size(17, 274);
-            this.PlayListBar.TabIndex = 0;
-            // 
-            // ListPanel
-            // 
-            this.ListPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ListPanel.Location = new System.Drawing.Point(0, 0);
-            this.ListPanel.Name = "ListPanel";
-            this.ListPanel.Size = new System.Drawing.Size(388, 274);
-            this.ListPanel.TabIndex = 1;
-            // 
-            // NowPlayList
-            // 
-            this.NowPlayList.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.NowPlayList.FormattingEnabled = true;
-            this.NowPlayList.ItemHeight = 12;
-            this.NowPlayList.Location = new System.Drawing.Point(0, 391);
-            this.NowPlayList.Name = "NowPlayList";
-            this.NowPlayList.Size = new System.Drawing.Size(98, 208);
-            this.NowPlayList.TabIndex = 4;
-            // 
-            // VolumeBar
-            // 
-            this.VolumeBar.AutoSize = false;
-            this.VolumeBar.Location = new System.Drawing.Point(638, 23);
-            this.VolumeBar.Maximum = 100;
-            this.VolumeBar.Name = "VolumeBar";
-            this.VolumeBar.Size = new System.Drawing.Size(145, 28);
-            this.VolumeBar.TabIndex = 0;
-            this.VolumeBar.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.VolumeBar.Value = 50;
+            this.SettingPanel.Visible = false;
             // 
             // HotKeyPanel
             // 
@@ -250,38 +381,6 @@
             this.HotKeyPanel.Name = "HotKeyPanel";
             this.HotKeyPanel.Size = new System.Drawing.Size(308, 39);
             this.HotKeyPanel.TabIndex = 4;
-            // 
-            // NowPlayInformationText
-            // 
-            this.NowPlayInformationText.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
-            this.NowPlayInformationText.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.NowPlayInformationText.Font = new System.Drawing.Font("굴림", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.NowPlayInformationText.Location = new System.Drawing.Point(79, 5);
-            this.NowPlayInformationText.Multiline = true;
-            this.NowPlayInformationText.Name = "NowPlayInformationText";
-            this.NowPlayInformationText.ReadOnly = true;
-            this.NowPlayInformationText.Size = new System.Drawing.Size(214, 58);
-            this.NowPlayInformationText.TabIndex = 5;
-            // 
-            // NowPlayInformationLabel
-            // 
-            this.NowPlayInformationLabel.AutoSize = true;
-            this.NowPlayInformationLabel.Font = new System.Drawing.Font("굴림", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.NowPlayInformationLabel.Location = new System.Drawing.Point(4, 6);
-            this.NowPlayInformationLabel.Name = "NowPlayInformationLabel";
-            this.NowPlayInformationLabel.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.NowPlayInformationLabel.Size = new System.Drawing.Size(71, 57);
-            this.NowPlayInformationLabel.TabIndex = 6;
-            this.NowPlayInformationLabel.Text = ": Artist\r\n: Album\r\n: Title";
-            // 
-            // LyricistLabel
-            // 
-            this.LyricistLabel.Location = new System.Drawing.Point(193, 135);
-            this.LyricistLabel.Name = "LyricistLabel";
-            this.LyricistLabel.Size = new System.Drawing.Size(212, 126);
-            this.LyricistLabel.TabIndex = 4;
-            this.LyricistLabel.Text = "Lyricist";
-            this.LyricistLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // AutoDown
             // 
@@ -331,136 +430,40 @@
             this.Tray.TabIndex = 0;
             this.Tray.UseVisualStyleBackColor = false;
             // 
-            // PlayAlbumCover
-            // 
-            this.PlayAlbumCover.Image = global::MusicPlayer.Properties.Resources.NoImage;
-            this.PlayAlbumCover.Location = new System.Drawing.Point(0, 135);
-            this.PlayAlbumCover.Name = "PlayAlbumCover";
-            this.PlayAlbumCover.Size = new System.Drawing.Size(195, 126);
-            this.PlayAlbumCover.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.PlayAlbumCover.TabIndex = 3;
-            this.PlayAlbumCover.TabStop = false;
-            // 
-            // PlayButton
-            // 
-            this.PlayButton.Image = global::MusicPlayer.Properties.Resources.Start;
-            this.PlayButton.Location = new System.Drawing.Point(388, 9);
-            this.PlayButton.Name = "PlayButton";
-            this.PlayButton.Size = new System.Drawing.Size(50, 50);
-            this.PlayButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.PlayButton.TabIndex = 4;
-            this.PlayButton.TabStop = false;
-            // 
-            // StopButton
-            // 
-            this.StopButton.Image = global::MusicPlayer.Properties.Resources.Stop;
-            this.StopButton.Location = new System.Drawing.Point(342, 15);
-            this.StopButton.Name = "StopButton";
-            this.StopButton.Size = new System.Drawing.Size(40, 40);
-            this.StopButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.StopButton.TabIndex = 3;
-            this.StopButton.TabStop = false;
-            // 
-            // NextButton
-            // 
-            this.NextButton.Image = global::MusicPlayer.Properties.Resources.Next;
-            this.NextButton.Location = new System.Drawing.Point(444, 15);
-            this.NextButton.Name = "NextButton";
-            this.NextButton.Size = new System.Drawing.Size(40, 40);
-            this.NextButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.NextButton.TabIndex = 2;
-            this.NextButton.TabStop = false;
-            // 
-            // VolumeButton
-            // 
-            this.VolumeButton.Image = global::MusicPlayer.Properties.Resources.Volume;
-            this.VolumeButton.Location = new System.Drawing.Point(605, 20);
-            this.VolumeButton.Name = "VolumeButton";
-            this.VolumeButton.Size = new System.Drawing.Size(28, 28);
-            this.VolumeButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.VolumeButton.TabIndex = 1;
-            this.VolumeButton.TabStop = false;
-            // 
-            // SettingIco
-            // 
-            this.SettingIco.Dock = System.Windows.Forms.DockStyle.Top;
-            this.SettingIco.Image = global::MusicPlayer.Properties.Resources.cogwheel;
-            this.SettingIco.Location = new System.Drawing.Point(0, 294);
-            this.SettingIco.Name = "SettingIco";
-            this.SettingIco.Size = new System.Drawing.Size(98, 98);
-            this.SettingIco.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.SettingIco.TabIndex = 3;
-            this.SettingIco.TabStop = false;
-            // 
-            // PlayListIco
-            // 
-            this.PlayListIco.Dock = System.Windows.Forms.DockStyle.Top;
-            this.PlayListIco.Image = global::MusicPlayer.Properties.Resources._interface;
-            this.PlayListIco.Location = new System.Drawing.Point(0, 196);
-            this.PlayListIco.Name = "PlayListIco";
-            this.PlayListIco.Size = new System.Drawing.Size(98, 98);
-            this.PlayListIco.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.PlayListIco.TabIndex = 2;
-            this.PlayListIco.TabStop = false;
-            // 
-            // SearchIco
-            // 
-            this.SearchIco.Dock = System.Windows.Forms.DockStyle.Top;
-            this.SearchIco.Image = global::MusicPlayer.Properties.Resources.square;
-            this.SearchIco.Location = new System.Drawing.Point(0, 98);
-            this.SearchIco.Name = "SearchIco";
-            this.SearchIco.Size = new System.Drawing.Size(98, 98);
-            this.SearchIco.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.SearchIco.TabIndex = 1;
-            this.SearchIco.TabStop = false;
-            // 
-            // PlayIco
-            // 
-            this.PlayIco.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.PlayIco.Dock = System.Windows.Forms.DockStyle.Top;
-            this.PlayIco.Image = global::MusicPlayer.Properties.Resources.play;
-            this.PlayIco.Location = new System.Drawing.Point(0, 0);
-            this.PlayIco.Name = "PlayIco";
-            this.PlayIco.Size = new System.Drawing.Size(98, 98);
-            this.PlayIco.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.PlayIco.TabIndex = 0;
-            this.PlayIco.TabStop = false;
-            this.PlayIco.Click += new System.EventHandler(this.PlayIco_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(919, 599);
+            this.Controls.Add(this.PlayBar);
             this.Controls.Add(this.SettingPanel);
             this.Controls.Add(this.PlayListPanel);
             this.Controls.Add(this.PlayPanel);
             this.Controls.Add(this.SearchPanel);
-            this.Controls.Add(this.PlayBar);
             this.Controls.Add(this.LeftPanel);
             this.Name = "MainForm";
             this.Text = "~(￣▽￣~) MusicPlayer (~￣▽￣)~";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.Resize += new System.EventHandler(this.MainForm_Resize);
             this.LeftPanel.ResumeLayout(false);
-            this.PlayBar.ResumeLayout(false);
-            this.PlayBar.PerformLayout();
-            this.SearchPanel.ResumeLayout(false);
-            this.SearchPanel.PerformLayout();
-            this.MusicListPanel.ResumeLayout(false);
-            this.PlayPanel.ResumeLayout(false);
-            this.PlayListPanel.ResumeLayout(false);
-            this.SettingPanel.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.VolumeBar)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.PlayAlbumCover)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.PlayButton)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.StopButton)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.NextButton)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.VolumeButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.SettingIco)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.PlayListIco)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.SearchIco)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.PlayIco)).EndInit();
+            this.PlayBar.ResumeLayout(false);
+            this.PlayBar.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.PlayButton)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.StopButton)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NextButton)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.VolumeButton)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.VolumeBar)).EndInit();
+            this.SearchPanel.ResumeLayout(false);
+            this.SearchPanel.PerformLayout();
+            this.MusicListPanel.ResumeLayout(false);
+            this.PlayPanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.PlayAlbumCover)).EndInit();
+            this.PlayListPanel.ResumeLayout(false);
+            this.SettingPanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
