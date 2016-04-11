@@ -275,6 +275,9 @@
             this.SearchText.Size = new System.Drawing.Size(344, 43);
             this.SearchText.TabIndex = 7;
             this.SearchText.Text = "Search Here... (~￣▽￣)~";
+            this.SearchText.Enter += new System.EventHandler(this.SearchText_Enter);
+            this.SearchText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.SearchText_KeyPress);
+            this.SearchText.Leave += new System.EventHandler(this.SearchText_Leave);
             // 
             // SearchButton
             // 
@@ -285,6 +288,7 @@
             this.SearchButton.TabIndex = 5;
             this.SearchButton.Text = "FIND";
             this.SearchButton.UseVisualStyleBackColor = true;
+            this.SearchButton.Click += new System.EventHandler(this.SearchButton_Click);
             // 
             // PlayPanel
             // 
@@ -300,12 +304,14 @@
             // 
             // LyricistLabel
             // 
+            this.LyricistLabel.BackColor = System.Drawing.Color.Transparent;
             this.LyricistLabel.Location = new System.Drawing.Point(193, 135);
             this.LyricistLabel.Name = "LyricistLabel";
             this.LyricistLabel.Size = new System.Drawing.Size(212, 126);
             this.LyricistLabel.TabIndex = 4;
             this.LyricistLabel.Text = "Lyricist";
             this.LyricistLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LyricistLabel.Visible = false;
             // 
             // PlayAlbumCover
             // 
@@ -338,9 +344,9 @@
             this.PlayListPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.PlayListPanel.Controls.Add(this.ListPanel);
             this.PlayListPanel.Controls.Add(this.PlayListBar);
-            this.PlayListPanel.Location = new System.Drawing.Point(98, 261);
+            this.PlayListPanel.Location = new System.Drawing.Point(98, 263);
             this.PlayListPanel.Name = "PlayListPanel";
-            this.PlayListPanel.Size = new System.Drawing.Size(405, 274);
+            this.PlayListPanel.Size = new System.Drawing.Size(405, 268);
             this.PlayListPanel.TabIndex = 11;
             this.PlayListPanel.Visible = false;
             // 
@@ -349,7 +355,7 @@
             this.ListPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ListPanel.Location = new System.Drawing.Point(0, 0);
             this.ListPanel.Name = "ListPanel";
-            this.ListPanel.Size = new System.Drawing.Size(388, 274);
+            this.ListPanel.Size = new System.Drawing.Size(388, 268);
             this.ListPanel.TabIndex = 1;
             // 
             // PlayListBar
@@ -357,7 +363,7 @@
             this.PlayListBar.Dock = System.Windows.Forms.DockStyle.Right;
             this.PlayListBar.Location = new System.Drawing.Point(388, 0);
             this.PlayListBar.Name = "PlayListBar";
-            this.PlayListBar.Size = new System.Drawing.Size(17, 274);
+            this.PlayListBar.Size = new System.Drawing.Size(17, 268);
             this.PlayListBar.TabIndex = 0;
             // 
             // SettingPanel

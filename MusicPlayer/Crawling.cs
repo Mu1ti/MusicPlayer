@@ -29,8 +29,10 @@ namespace MusicPlayer
                 5. 앨범 재킷 URL
                 6. URL
             */
-            string URL = "https://www.youtube.com/results?search_query=" + System.Web.HttpUtility.UrlEncode(KeyWord);
+            string URL = "http://www.youtube.com/results?q=" + System.Web.HttpUtility.UrlEncode(KeyWord);
+            //string URL = "http://www.naver.com";
             string Source = GetSource(URL);
+
             string[] TitleResult = RegexToStringArr("(?<=dir=\"ltr\">).*(?=<\\/a><sp)", Source);
             string[] ArtistResult = new string[TitleResult.Length];
             string[] URLResult = RegexToStringArr("(?<=\"yt-lockup-title \"><a href=\").*(?=\" class=\"yt-uix-sessionlink yt)",Source);

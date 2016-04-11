@@ -22,6 +22,17 @@ namespace MusicPlayer
         private TextBox[] MusicInformationText = new TextBox[256];
         public static string[,] MusicInformation;
         int ListCount = 0;
+        string htmlSrc = @"<html>
+                            <head>
+                                <meta charset='UTF-8'>
+                            </head>
+                            <body style='margin:0px;padding:0px;'>
+                                <div style='margin:0px;padding:0px;'>
+                                    <embed src='https://www.youtube.com/v/{0}?rel=0&showinfo=0&version=3&amp;hl=ko_KR&amp;vq=hd720&autoplay=1&controls=0&frameborder=0' type='application/x-shockwave-flash' width='100%' height='100%' ='always' allowfullscreen='true'>
+                                    </embed>
+                                </div>
+                            </body>
+                           </html>";
 
         public MainForm()
         {
@@ -154,6 +165,26 @@ namespace MusicPlayer
             //*        PlayPanel Items Resize           *
             //*******************************************
 
+            LyricistLabel.Top = 0;
+            LyricistLabel.Left = 0;
+            LyricistLabel.Height = PlayPanel.Height;
+            LyricistLabel.Width = PlayPanel.Width;
+
+            PlayAlbumCover.Top = 0;
+            PlayAlbumCover.Left = 0;
+            PlayAlbumCover.Height = PlayPanel.Height;
+            PlayAlbumCover.Width = PlayPanel.Width;
+
+            YoutubePlayer.Top = 0;
+            YoutubePlayer.Left = 0;
+            YoutubePlayer.Height = PlayPanel.Height;
+            YoutubePlayer.Width = PlayPanel.Width;
+
+            SoundVisualizer.Top = 0;
+            SoundVisualizer.Left = 0;
+            SoundVisualizer.Height = PlayPanel.Height;
+            SoundVisualizer.Width = PlayPanel.Width;
+
             //*******************************************
             //*        SearchPanel Item Resize          *
             //*******************************************
@@ -168,10 +199,32 @@ namespace MusicPlayer
             MusicListPanel.Width = SearchPanel.Width;
             MusicListPanel.Height = PlayBar.Top;
 
+            //*******************************************
+            //*       PlayListPanel Item Resize         *
+            //*******************************************
 
 
+
+            //*******************************************
+            //*        SettingPanel Item Resize         *
+            //*******************************************
+
+
+
+            //*******************************************
+            //*        PlayBarPanel Item Resize         *
+            //*******************************************
+
+            NowPlayInformationLabel.Left = 20;
+            NowPlayInformationText.Left = NowPlayInformationLabel.Left + NowPlayInformationLabel.Width + 5;
+            NowPlayInformationText.Width = StopButton.Left - NowPlayInformationText.Left - 10;
+            PlayButton.Left = (int)((PlayBar.Width * 0.5) - (PlayButton.Width * 0.5));
+            StopButton.Left = PlayButton.Left - StopButton.Width - 6;
+            NextButton.Left = PlayButton.Left + PlayButton.Width + 6;
+            VolumeBar.Left = PlayBar.Width - VolumeBar.Width - 20;
+            VolumeButton.Left = VolumeBar.Left - VolumeButton.Width - 6;
         }
-        
+
         private void DownloadButton(object sender, EventArgs e)
         {
             int Index = Convert.ToInt32(((PictureBox)sender).Name.Trim());
@@ -241,8 +294,6 @@ namespace MusicPlayer
 
             SearchPanel.Visible = true;
             PlayPanel.Visible = false;
-
-            
         }
     }
 }
