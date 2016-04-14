@@ -330,6 +330,7 @@
             this.SoundVisualizer.Name = "SoundVisualizer";
             this.SoundVisualizer.Size = new System.Drawing.Size(210, 135);
             this.SoundVisualizer.TabIndex = 2;
+            this.SoundVisualizer.Visible = false;
             // 
             // YoutubePlayer
             // 
@@ -338,6 +339,7 @@
             this.YoutubePlayer.Name = "YoutubePlayer";
             this.YoutubePlayer.Size = new System.Drawing.Size(195, 136);
             this.YoutubePlayer.TabIndex = 0;
+            this.YoutubePlayer.Url = new System.Uri("about:blank", System.UriKind.Absolute);
             // 
             // PlayListPanel
             // 

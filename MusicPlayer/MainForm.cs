@@ -22,17 +22,6 @@ namespace MusicPlayer
         private TextBox[] MusicInformationText = new TextBox[256];
         public static string[,] MusicInformation;
         int ListCount = 0;
-        string htmlSrc = @"<html>
-                            <head>
-                                <meta charset='UTF-8'>
-                            </head>
-                            <body style='margin:0px;padding:0px;'>
-                                <div style='margin:0px;padding:0px;'>
-                                    <embed src='https://www.youtube.com/v/{0}?rel=0&showinfo=0&version=3&amp;hl=ko_KR&amp;vq=hd720&autoplay=1&controls=0&frameborder=0' type='application/x-shockwave-flash' width='100%' height='100%' ='always' allowfullscreen='true'>
-                                    </embed>
-                                </div>
-                            </body>
-                           </html>";
 
         public MainForm()
         {
@@ -73,7 +62,7 @@ namespace MusicPlayer
                 AlbumePicture[ListCount].Name = " " + ListCount + " ";
                 AlbumePicture[ListCount].Image = Image.FromFile(AlbumPath);
                 AlbumePicture[ListCount].SizeMode = PictureBoxSizeMode.StretchImage;
-                AlbumePicture[ListCount].Click += new System.EventHandler(DownloadButton);
+                AlbumePicture[ListCount].Click += new System.EventHandler(Play);
                 AlbumePicture[ListCount].MouseWheel += new MouseEventHandler(Scrolled);
                 MusicItemPanel[ListCount].Controls.Add(AlbumePicture[ListCount]);
 
@@ -223,17 +212,42 @@ namespace MusicPlayer
             NextButton.Left = PlayButton.Left + PlayButton.Width + 6;
             VolumeBar.Left = PlayBar.Width - VolumeBar.Width - 20;
             VolumeButton.Left = VolumeBar.Left - VolumeButton.Width - 6;
+
+            //*******************************************
+            //*         SearchPanel Item Resize         *
+            //*******************************************
+            
+            for( int i = 0; MusicItemPanel[i] != null; i++ ){
+                MusicItemPanel[i].Width = MusicListBar.Left;
+                MusicInformationText[i].Width = MusicItemPanel[i].Width - 20;
+            }
+
         }
 
-        private void DownloadButton(object sender, EventArgs e)
+        private string YoutubePlay(string URL)
+        {
+            string htmlSrc = "<html><head><meta charset='UTF-8'></head><body style='margin:0px;padding:0px;'><div style='margin:0px;padding:0px;'><embed src='https://www.youtube.com/v/"+URL.Split('=')[1]+"?rel=0&showinfo=0&version=3&amp;hl=ko_KR&amp;vq=hd720&autoplay=1&controls=0&frameborder=0' type='application/x-shockwave-flash' width='100%' height='100%' ='always' allowfullscreen='true'></embed></div></body></html>";
+            return htmlSrc;
+        }
+
+        private void Play(object sender, EventArgs e)
         {
             int Index = Convert.ToInt32(((PictureBox)sender).Name.Trim());
             string indextext = MusicInformationText[Index].Text;
             int urlstartposition = indextext.LastIndexOf("https://");
             string url = indextext.Remove(0, urlstartposition);
 
+            YoutubePlayer.Document.Write(YoutubePlay(url));
+            YoutubePlayer.Refresh();
+
+            PlayAlbumCover.Visible = false;
+            YoutubePlayer.Visible = true;
+            PlayIco_Click(sender, e);
+
             Thread Down = new Thread(() => Downloader.YoutubeDownloader(url, ".\\Music\\", Index));
             Down.Start();
+
+
 
         }
         private void Scrolled(object sender, MouseEventArgs e)

@@ -30,21 +30,30 @@ namespace MusicPlayer
                 6. URL
             */
             string URL = "http://www.youtube.com/results?q=" + System.Web.HttpUtility.UrlEncode(KeyWord);
-            //string URL = "http://www.naver.com";
             string Source = GetSource(URL);
 
             string[] TitleResult = RegexToStringArr("(?<=dir=\"ltr\">).*(?=<\\/a><sp)", Source);
             string[] ArtistResult = new string[TitleResult.Length];
             string[] URLResult = RegexToStringArr("(?<=\"yt-lockup-title \"><a href=\").*(?=\" class=\"yt-uix-sessionlink yt)",Source);
-            string[] PicResult = RegexToStringArr("((?<=c=\"\\/\\/).*(?=\" alt=\"\" width=))|((?<=\" alt=\"\" data-thumb=\"\\/\\/).*(?=\" w))", Source);
+            //string[] PicResult = RegexToStringArr(@"((?<=c=\"\\/\\/).*(?=\" alt=\"\" width=))|((?<=\" alt=\"\" data-thumb=\"\\/\\/).*(?=\" w))", Source);
+            //string[] PicResult = RegexToStringArr(".{26}.mqdefault.jpg. alt=", Source);
+            string[] PicResult = RegexToStringArr(".{26}.mqdefault.jpg", Source);
             string[,] Result = new string[TitleResult.Length, 6];
 
             for (int i = 0; URLResult.Length > i; i++) URLResult[i] = "https://www.youtube.com" + URLResult[i];
             for (int i = 0; PicResult.Length > i; i++) PicResult[i] = "https://" + PicResult[i];
-            for (int i = 0; PicResult.Length > i; i++)
+            for (int i = 0; 20 > i; i++)
             {
-                Downloader.DownloadRemoteImageFile(PicResult[i], @"./\YoutubePictures\" + i + ".jpg");
-                PicResult[i] = @"./\YoutubePictures\" + i + ".jpg";
+                if(PicResult[i] != "")
+                {
+                    Downloader.DownloadRemoteImageFile(PicResult[i], @"./\YoutubePictures\" + i + ".jpg");
+                    PicResult[i] = @"./\YoutubePictures\" + i + ".jpg";
+                }
+                else
+                {
+
+                }
+
             }
             for (int i = 0; TitleResult.Length > i; i++)
             {
