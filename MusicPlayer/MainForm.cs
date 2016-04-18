@@ -27,7 +27,6 @@ namespace MusicPlayer
         {
             InitializeComponent();
         }
-
         private void MainForm_Load(object sender, EventArgs e)
         {
             MainForm_Resize(sender, e);
@@ -246,9 +245,6 @@ namespace MusicPlayer
 
             Thread Down = new Thread(() => Downloader.YoutubeDownloader(url, ".\\Music\\", Index));
             Down.Start();
-
-
-
         }
         private void Scrolled(object sender, MouseEventArgs e)
         {

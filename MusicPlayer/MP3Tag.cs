@@ -26,5 +26,18 @@ namespace MusicPlayer
 
         }
 
+        public static string[] GetTag(string Path)
+        {
+            string[] MusicInformation = new string[6];
+            ID3v2Tag Information = new ID3v2Tag(Path);
+            MusicInformation[0] = Information.Title;
+            MusicInformation[1] = Information.Artist;
+            MusicInformation[2] = Information.Album;
+            MusicInformation[3] = Information.Lyricist;
+            Image AlbumPicture = Information.PictureList[0].Picture;
+            MusicInformation[4] = AlbumPicture.ToString();
+
+
+        }
     }
 }

@@ -96,46 +96,46 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="NoImage.jpg" />
+    <None Include="Images\NoImage.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="cogwheel.png" />
+    <None Include="Images\cogwheel.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="interface.png" />
+    <None Include="Images\interface.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="play.png" />
+    <None Include="Images\play.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="square.png" />
+    <None Include="Images\square.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Again.png" />
+    <None Include="Images\Again.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="arrows.png" />
+    <None Include="Images\arrows.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="diskette.png" />
+    <None Include="Images\diskette.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="balloon.png" />
+    <None Include="Images\balloon.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Next.png" />
+    <None Include="Images\Next.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Pause.png" />
+    <None Include="Images\Pause.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Start.png" />
+    <None Include="Images\Start.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Stop.png" />
+    <None Include="Images\Stop.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Volume.png" />
+    <None Include="Images\Volume.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
