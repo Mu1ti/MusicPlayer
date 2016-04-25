@@ -30,14 +30,12 @@ namespace MusicPlayer
                 6. URL
             */
             string URL = "http://www.youtube.com/results?q=" + System.Web.HttpUtility.UrlEncode(KeyWord);
-            string Source = GetSource(URL);
+            string Source = Utility.GetSource(URL);
 
-            string[] TitleResult = RegexToStringArr("(?<=dir=\"ltr\">).*(?=<\\/a><sp)", Source);
+            string[] TitleResult = Utility.RegexToStringArr("(?<=dir=\"ltr\">).*(?=<\\/a><sp)", Source);
             string[] ArtistResult = new string[TitleResult.Length];
-            string[] URLResult = RegexToStringArr("(?<=\"yt-lockup-title \"><a href=\").*(?=\" class=\"yt-uix-sessionlink yt)",Source);
-            //string[] PicResult = RegexToStringArr(@"((?<=c=\"\\/\\/).*(?=\" alt=\"\" width=))|((?<=\" alt=\"\" data-thumb=\"\\/\\/).*(?=\" w))", Source);
-            //string[] PicResult = RegexToStringArr(".{26}.mqdefault.jpg. alt=", Source);
-            string[] PicResult = RegexToStringArr(".{26}.mqdefault.jpg", Source);
+            string[] URLResult = Utility.RegexToStringArr("(?<=\"yt-lockup-title \"><a href=\").*(?=\" class=\"yt-uix-sessionlink yt)",Source);
+            string[] PicResult = Utility.RegexToStringArr(".{26}.mqdefault.jpg", Source);
             string[,] Result = new string[TitleResult.Length, 6];
 
             for (int i = 0; URLResult.Length > i; i++) URLResult[i] = "https://www.youtube.com" + URLResult[i];
@@ -46,7 +44,7 @@ namespace MusicPlayer
             {
                 if(PicResult[i] != "")
                 {
-                    Downloader.DownloadRemoteImageFile(PicResult[i], @"./\YoutubePictures\" + i + ".jpg");
+                    Utility.DownloadRemoteImageFile(PicResult[i], @"./\YoutubePictures\" + i + ".jpg");
                     PicResult[i] = @"./\YoutubePictures\" + i + ".jpg";
                 }
                 else
@@ -81,31 +79,11 @@ namespace MusicPlayer
         }
         public string[,] SoundCloudCrawling(string KeyWord)
         {
-            string Json = GetSource("https://api.soundcloud.com/tracks.json?client_id=a162f1f21992081b0eb58bfd70611886&client_secret=fc82d49acf4b98b64c2287cc9d187be5&q=" + System.Web.HttpUtility.UrlEncode(KeyWord));
+            string Json = Utility.GetSource("https://api.soundcloud.com/tracks.json?client_id=a162f1f21992081b0eb58bfd70611886&client_secret=fc82d49acf4b98b64c2287cc9d187be5&q=" + System.Web.HttpUtility.UrlEncode(KeyWord));
             object Information = JsonConvert.DeserializeObject(Json);
             
 
             return null;
         }
-
-        public static string[] RegexToStringArr(string reg, string str)
-        {
-            Regex Parsed = new Regex(reg, RegexOptions.IgnoreCase);
-            MatchCollection mc = Parsed.Matches(str);
-            string[] Result = new string[mc.Count];
-
-            for (int i = 0; mc.Count > i; i++) Result[i] = System.Web.HttpUtility.HtmlDecode(mc[i].ToString());
-            return Result;
-        }
-        public static string GetSource(string url)
-
-        {
-            HttpWebRequest request = HttpWebRequest.Create(url) as HttpWebRequest;
-            HttpWebResponse response = (request.GetResponse() as HttpWebResponse);
-
-            StreamReader reader = new StreamReader(response.GetResponseStream());
-            return reader.ReadToEnd();
-        }
-
     }
 }

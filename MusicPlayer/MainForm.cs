@@ -22,17 +22,51 @@ namespace MusicPlayer
         private TextBox[] MusicInformationText = new TextBox[256];
         public static string[,] MusicInformation;
         int ListCount = 0;
-
-        public MainForm()
+        
+        private string YoutubePlay(string URL)
         {
-            InitializeComponent();
+            string htmlSrc = "<html><head><meta charset='UTF-8'></head><body style='margin:0px;padding:0px;'><div style='margin:0px;padding:0px;'><embed src='https://www.youtube.com/v/"+URL.Split('=')[1]+"?rel=0&showinfo=0&version=3&amp;hl=ko_KR&amp;vq=hd720&autoplay=1&controls=0&frameborder=0' type='application/x-shockwave-flash' width='100%' height='100%' ='always' allowfullscreen='true'></embed></div></body></html>";
+            return htmlSrc;
         }
-        private void MainForm_Load(object sender, EventArgs e)
+        private bool PlayMusic(string type, string value)
         {
-            MainForm_Resize(sender, e);
-            MusicListPanel.MouseWheel += new MouseEventHandler(Scrolled);
+            if (type == "Youtube")
+            {
+                YoutubePlayer.Document.Write(YoutubePlay(value));
+                YoutubePlayer.Refresh();
+
+                PlayAlbumCover.Visible = false;
+                YoutubePlayer.Visible = true;
+                return true;
+            }
+            else if (type == "SoundCloud")
+            {
+
+
+                return true;
+            }
+            else if (type == "LocalMp3")
+            {
+
+
+                return true;
+            }
+            else if (type == "Mp3Site")
+            {
+
+
+                return true;
+            }
+            return false;
         }
         
+
+        #region Controls Events
+
+        //*******************************************
+        //*        Custom Controls Events           *
+        //*******************************************
+
         private bool CreateMusicItem(string Title, string Artist, string Album, string Lyricist, string AlbumPath, string URL)
         {
             try
@@ -94,6 +128,94 @@ namespace MusicPlayer
                 return false;
             }
 
+        }
+        private void MusicItemClicked(object sender, EventArgs e)
+        {
+            int Index = Convert.ToInt32(((PictureBox)sender).Name.Trim());
+            string indextext = MusicInformationText[Index].Text;
+
+            if(indextext.Contains("youtube"))
+            {
+                //Youtube Item
+
+            }
+
+            int urlstartposition = indextext.LastIndexOf("https://");
+            string url = indextext.Remove(0, urlstartposition);
+
+            Thread Down = new Thread(() => Downloader.YoutubeDownloader(url, ".\\Music\\", Index));
+            Down.Start();
+        }
+        private void Scrolled(object sender, MouseEventArgs e)
+        {
+            if (e.Delta > 0)
+            {
+                for (int i = 0; MusicItemPanel[i] != null; i++)
+                {
+                    MusicItemPanel[i].Top = MusicItemPanel[i].Top + MusicItemPanel[i].Height;
+                    if (MusicItemPanel[0].Top > 0)
+                    {
+                        MusicItemPanel[i].Top = MusicItemPanel[i].Top - MusicItemPanel[i].Height;
+                        break;
+                    }
+                }
+                if(MusicListBar.Value != 0) MusicListBar.Value--;
+            }
+            else
+            {
+                for (int i = 0; MusicItemPanel[i] != null; i++)
+                    MusicItemPanel[i].Top = MusicItemPanel[i].Top - MusicItemPanel[i].Height;
+                MusicListBar.Value++;
+            }
+        }
+
+        //*******************************************
+        //*           Controls Events               *
+        //*******************************************
+
+        public MainForm()
+        {
+            InitializeComponent();
+        }
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            MainForm_Resize(sender, e);
+            MusicListPanel.MouseWheel += new MouseEventHandler(Scrolled);
+        }
+        private void SearchText_Enter(object sender, EventArgs e)
+        {
+            if (SearchText.Text == "Search Here... (~￣▽￣)~")
+            {
+                SearchText.Text = null;
+                SearchText.ForeColor = Color.Black;
+            }
+        }
+        private void SearchText_Leave(object sender, EventArgs e)
+        {
+            if(SearchText.Text == null)
+            {
+                SearchText.Text = "Search Here... (~￣▽￣)~";
+                SearchText.ForeColor = Color.Gray;
+            }
+        }
+        private void SearchText_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if(SearchText.Text != null) {if (e.KeyChar == 13) SearchButton_Click(sender, e); }
+            
+        }
+        private void PlayIco_Click(object sender, EventArgs e)
+        {
+            MainForm_Resize(sender, e);
+
+            SearchPanel.Visible = false;
+            PlayPanel.Visible = true;
+        }
+        private void SearchIco_Click(object sender, EventArgs e)
+        {
+            MainForm_Resize(sender, e);
+
+            SearchPanel.Visible = true;
+            PlayPanel.Visible = false;
         }
         private void SearchButton_Click(object sender, EventArgs e)
         {
@@ -222,118 +344,6 @@ namespace MusicPlayer
             }
 
         }
-
-        private string YoutubePlay(string URL)
-        {
-            string htmlSrc = "<html><head><meta charset='UTF-8'></head><body style='margin:0px;padding:0px;'><div style='margin:0px;padding:0px;'><embed src='https://www.youtube.com/v/"+URL.Split('=')[1]+"?rel=0&showinfo=0&version=3&amp;hl=ko_KR&amp;vq=hd720&autoplay=1&controls=0&frameborder=0' type='application/x-shockwave-flash' width='100%' height='100%' ='always' allowfullscreen='true'></embed></div></body></html>";
-            return htmlSrc;
-        }
-
-        private bool PlayMusic(string type, string value)
-        {
-            if (type == "Youtube")
-            {
-                YoutubePlayer.Document.Write(YoutubePlay(value));
-                YoutubePlayer.Refresh();
-
-                PlayAlbumCover.Visible = false;
-                YoutubePlayer.Visible = true;
-                return true;
-            }
-            else if (type == "SoundCloud")
-            {
-
-
-                return true;
-            }
-            else if (type == "LocalMp3")
-            {
-
-
-                return true;
-            }
-            else if (type == "Mp3Site")
-            {
-
-
-                return true;
-            }
-            return false;
-        }
-
-        private void MusicItemClicked(object sender, EventArgs e)
-        {
-            int Index = Convert.ToInt32(((PictureBox)sender).Name.Trim());
-            string indextext = MusicInformationText[Index].Text;
-
-            if(indextext.Contains("youtube"))
-            {
-                //Youtube Item
-
-            }
-
-            int urlstartposition = indextext.LastIndexOf("https://");
-            string url = indextext.Remove(0, urlstartposition);
-
-            Thread Down = new Thread(() => Downloader.YoutubeDownloader(url, ".\\Music\\", Index));
-            Down.Start();
-        }
-        private void Scrolled(object sender, MouseEventArgs e)
-        {
-            if (e.Delta > 0)
-            {
-                for (int i = 0; MusicItemPanel[i] != null; i++)
-                {
-                    MusicItemPanel[i].Top = MusicItemPanel[i].Top + MusicItemPanel[i].Height;
-                    if (MusicItemPanel[0].Top > 0)
-                    {
-                        MusicItemPanel[i].Top = MusicItemPanel[i].Top - MusicItemPanel[i].Height;
-                        break;
-                    }
-                }
-                if(MusicListBar.Value != 0) MusicListBar.Value--;
-            }
-            else
-            {
-                for (int i = 0; MusicItemPanel[i] != null; i++)
-                    MusicItemPanel[i].Top = MusicItemPanel[i].Top - MusicItemPanel[i].Height;
-                MusicListBar.Value++;
-            }
-        }
-        private void SearchText_Enter(object sender, EventArgs e)
-        {
-            if (SearchText.Text == "Search Here... (~￣▽￣)~")
-            {
-                SearchText.Text = null;
-                SearchText.ForeColor = Color.Black;
-            }
-        }
-        private void SearchText_Leave(object sender, EventArgs e)
-        {
-            if(SearchText.Text == null)
-            {
-                SearchText.Text = "Search Here... (~￣▽￣)~";
-                SearchText.ForeColor = Color.Gray;
-            }
-        }
-        private void SearchText_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if(SearchText.Text != null) {if (e.KeyChar == 13) SearchButton_Click(sender, e); }
-            
-        }
-        private void PlayIco_Click(object sender, EventArgs e)
-        {
-            MainForm_Resize(sender, e);
-
-            SearchPanel.Visible = false;
-            PlayPanel.Visible = true;
-        }
-        private void SearchIco_Click(object sender, EventArgs e)
-        {
-            MainForm_Resize(sender, e);
-
-            SearchPanel.Visible = true;
-            PlayPanel.Visible = false;
-        }
+        #endregion
     }
 }
