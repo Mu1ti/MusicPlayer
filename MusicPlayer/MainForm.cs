@@ -61,7 +61,7 @@ namespace MusicPlayer
                 AlbumePicture[ListCount].Name = " " + ListCount + " ";
                 AlbumePicture[ListCount].Image = Image.FromFile(AlbumPath);
                 AlbumePicture[ListCount].SizeMode = PictureBoxSizeMode.StretchImage;
-                AlbumePicture[ListCount].Click += new System.EventHandler(Play);
+                AlbumePicture[ListCount].Click += new System.EventHandler(MusicItemClicked);
                 AlbumePicture[ListCount].MouseWheel += new MouseEventHandler(Scrolled);
                 MusicItemPanel[ListCount].Controls.Add(AlbumePicture[ListCount]);
 
@@ -229,19 +229,51 @@ namespace MusicPlayer
             return htmlSrc;
         }
 
-        private void Play(object sender, EventArgs e)
+        private bool PlayMusic(string type, string value)
+        {
+            if (type == "Youtube")
+            {
+                YoutubePlayer.Document.Write(YoutubePlay(value));
+                YoutubePlayer.Refresh();
+
+                PlayAlbumCover.Visible = false;
+                YoutubePlayer.Visible = true;
+                return true;
+            }
+            else if (type == "SoundCloud")
+            {
+
+
+                return true;
+            }
+            else if (type == "LocalMp3")
+            {
+
+
+                return true;
+            }
+            else if (type == "Mp3Site")
+            {
+
+
+                return true;
+            }
+            return false;
+        }
+
+        private void MusicItemClicked(object sender, EventArgs e)
         {
             int Index = Convert.ToInt32(((PictureBox)sender).Name.Trim());
             string indextext = MusicInformationText[Index].Text;
+
+            if(indextext.Contains("youtube"))
+            {
+                //Youtube Item
+
+            }
+
             int urlstartposition = indextext.LastIndexOf("https://");
             string url = indextext.Remove(0, urlstartposition);
-
-            YoutubePlayer.Document.Write(YoutubePlay(url));
-            YoutubePlayer.Refresh();
-
-            PlayAlbumCover.Visible = false;
-            YoutubePlayer.Visible = true;
-            PlayIco_Click(sender, e);
 
             Thread Down = new Thread(() => Downloader.YoutubeDownloader(url, ".\\Music\\", Index));
             Down.Start();
@@ -289,7 +321,6 @@ namespace MusicPlayer
             if(SearchText.Text != null) {if (e.KeyChar == 13) SearchButton_Click(sender, e); }
             
         }
-
         private void PlayIco_Click(object sender, EventArgs e)
         {
             MainForm_Resize(sender, e);
@@ -297,7 +328,6 @@ namespace MusicPlayer
             SearchPanel.Visible = false;
             PlayPanel.Visible = true;
         }
-
         private void SearchIco_Click(object sender, EventArgs e)
         {
             MainForm_Resize(sender, e);

@@ -83,9 +83,9 @@ namespace MusicPlayer.Properties {
         /// <summary>
         ///   System.Drawing.Bitmap 형식의 지역화된 리소스를 찾습니다.
         /// </summary>
-        internal static System.Drawing.Bitmap AutoDown {
+        internal static System.Drawing.Bitmap arrows {
             get {
-                object obj = ResourceManager.GetObject("AutoDown", resourceCulture);
+                object obj = ResourceManager.GetObject("arrows", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -113,9 +113,9 @@ namespace MusicPlayer.Properties {
         /// <summary>
         ///   System.Drawing.Bitmap 형식의 지역화된 리소스를 찾습니다.
         /// </summary>
-        internal static System.Drawing.Bitmap Download {
+        internal static System.Drawing.Bitmap diskette {
             get {
-                object obj = ResourceManager.GetObject("Download", resourceCulture);
+                object obj = ResourceManager.GetObject("diskette", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

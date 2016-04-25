@@ -37,7 +37,7 @@ namespace MusicPlayer
             Image AlbumPicture = Information.PictureList[0].Picture;
             MusicInformation[4] = AlbumPicture.ToString();
 
-
+            return MusicInformation;
         }
     }
 }

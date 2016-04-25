@@ -394,7 +394,7 @@
             // 
             this.AutoDown.Appearance = System.Windows.Forms.Appearance.Button;
             this.AutoDown.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.AutoDown.BackgroundImage = global::MusicPlayer.Properties.Resources.Download;
+            //this.AutoDown.BackgroundImage = global::MusicPlayer.Properties.Resources.Download;
             this.AutoDown.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.AutoDown.Location = new System.Drawing.Point(262, 31);
             this.AutoDown.Name = "AutoDown";
@@ -418,7 +418,7 @@
             // 
             this.SavePoint.Appearance = System.Windows.Forms.Appearance.Button;
             this.SavePoint.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.SavePoint.BackgroundImage = global::MusicPlayer.Properties.Resources.AutoDown;
+//            this.SavePoint.BackgroundImage = global::MusicPlayer.Properties.Resources.AutoDown;
             this.SavePoint.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.SavePoint.Location = new System.Drawing.Point(262, 128);
             this.SavePoint.Name = "SavePoint";
