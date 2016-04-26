@@ -17,6 +17,24 @@ namespace MusicPlayer
             {
             //    YoutubeDownloader(u)
             }
+            else if (Type == "SoundCloud")
+            {
+
+
+                return true;
+            }
+            else if (Type == "LocalMp3")
+            {
+
+
+                return true;
+            }
+            else if (Type == "Mp3Site")
+            {
+
+
+                return true;
+            }
             //Thread Down = new Thread(() => Downloader.YoutubeDownloader(url, ".\\Music\\", Index));
             //if()
 

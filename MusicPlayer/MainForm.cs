@@ -23,7 +23,7 @@ namespace MusicPlayer
         public static string[,] MusicInformation;
         int ListCount = 0;
         
-        private string YoutubePlay(string URL)
+        private string Play_Youtube(string URL)
         {
             string htmlSrc = "<html><head><meta charset='UTF-8'></head><body style='margin:0px;padding:0px;'><div style='margin:0px;padding:0px;'><embed src='https://www.youtube.com/v/"+URL.Split('=')[1]+"?rel=0&showinfo=0&version=3&amp;hl=ko_KR&amp;vq=hd720&autoplay=1&controls=0&frameborder=0' type='application/x-shockwave-flash' width='100%' height='100%' ='always' allowfullscreen='true'></embed></div></body></html>";
             return htmlSrc;
@@ -32,7 +32,7 @@ namespace MusicPlayer
         {
             if (type == "Youtube")
             {
-                YoutubePlayer.Document.Write(YoutubePlay(value));
+                YoutubePlayer.Document.Write(Play_Youtube(value));
                 YoutubePlayer.Refresh();
 
                 PlayAlbumCover.Visible = false;
@@ -61,12 +61,74 @@ namespace MusicPlayer
         }
         
 
-        #region Controls Events
+          #region Controls Events
 
         //*******************************************
         //*        Custom Controls Events           *
         //*******************************************
 
+        private void MusicItemClicked(object sender, EventArgs e)
+        {
+            int Index = Convert.ToInt32(((PictureBox)sender).Name.Trim());
+            string indextext = MusicInformationText[Index].Text;
+
+            if(indextext.Contains("youtube"))
+            {
+                //Youtube Item
+                int urlstartposition = indextext.LastIndexOf("https://");
+                string url = indextext.Remove(0, urlstartposition);
+
+                PlayMusic("Youtube", url);
+
+                //Thread Down = new Thread(() => Downloader.YoutubeDownloader(url, ".\\Music\\", Index));
+                //Down.Start();
+
+            }
+
+
+        }
+        private void Scrolled(object sender, MouseEventArgs e)
+        {
+            if (e.Delta > 0)
+            {
+                for (int i = 0; MusicItemPanel[i] != null; i++)
+                {
+                    MusicItemPanel[i].Top = MusicItemPanel[i].Top + MusicItemPanel[i].Height;
+                    if (MusicItemPanel[0].Top > 0)
+                    {
+                        MusicItemPanel[i].Top = MusicItemPanel[i].Top - MusicItemPanel[i].Height;
+                        break;
+                    }
+                }
+                if(MusicListBar.Value != 0) MusicListBar.Value--;
+            }
+            else
+            {
+                for (int i = 0; MusicItemPanel[i] != null; i++)
+                    MusicItemPanel[i].Top = MusicItemPanel[i].Top - MusicItemPanel[i].Height;
+                MusicListBar.Value++;
+            }
+        }
+        private bool RemoveMusicItem()
+        {
+            try
+            {
+                for (int i = 0; ListCount > i; i++)
+                {
+                    MusicItemPanel[i] = new Panel();
+                    AlbumePicture[i] = new PictureBox();
+                    MusicInformationLabel[i] = new Label();
+                    MusicInformationText[i] = new TextBox();
+                }
+                ListCount = 0;
+                return true;
+            }
+            catch(Exception e)
+            {
+                return false;
+            }
+
+        }
         private bool CreateMusicItem(string Title, string Artist, string Album, string Lyricist, string AlbumPath, string URL)
         {
             try
@@ -128,45 +190,6 @@ namespace MusicPlayer
                 return false;
             }
 
-        }
-        private void MusicItemClicked(object sender, EventArgs e)
-        {
-            int Index = Convert.ToInt32(((PictureBox)sender).Name.Trim());
-            string indextext = MusicInformationText[Index].Text;
-
-            if(indextext.Contains("youtube"))
-            {
-                //Youtube Item
-
-            }
-
-            int urlstartposition = indextext.LastIndexOf("https://");
-            string url = indextext.Remove(0, urlstartposition);
-
-            Thread Down = new Thread(() => Downloader.YoutubeDownloader(url, ".\\Music\\", Index));
-            Down.Start();
-        }
-        private void Scrolled(object sender, MouseEventArgs e)
-        {
-            if (e.Delta > 0)
-            {
-                for (int i = 0; MusicItemPanel[i] != null; i++)
-                {
-                    MusicItemPanel[i].Top = MusicItemPanel[i].Top + MusicItemPanel[i].Height;
-                    if (MusicItemPanel[0].Top > 0)
-                    {
-                        MusicItemPanel[i].Top = MusicItemPanel[i].Top - MusicItemPanel[i].Height;
-                        break;
-                    }
-                }
-                if(MusicListBar.Value != 0) MusicListBar.Value--;
-            }
-            else
-            {
-                for (int i = 0; MusicItemPanel[i] != null; i++)
-                    MusicItemPanel[i].Top = MusicItemPanel[i].Top - MusicItemPanel[i].Height;
-                MusicListBar.Value++;
-            }
         }
 
         //*******************************************

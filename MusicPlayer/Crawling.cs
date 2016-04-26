@@ -2,6 +2,7 @@
 using System.Net;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
+using System.Threading;
 
 namespace MusicPlayer
 {
@@ -35,14 +36,15 @@ namespace MusicPlayer
             string[] TitleResult = Utility.RegexToStringArr("(?<=dir=\"ltr\">).*(?=<\\/a><sp)", Source);
             string[] ArtistResult = new string[TitleResult.Length];
             string[] URLResult = Utility.RegexToStringArr("(?<=\"yt-lockup-title \"><a href=\").*(?=\" class=\"yt-uix-sessionlink yt)",Source);
-            string[] PicResult = Utility.RegexToStringArr(".{26}.mqdefault.jpg", Source);
+            string[] PicResult = Utility.RegexToStringArr(".{27}mqdefault.jpg", Source);
             string[,] Result = new string[TitleResult.Length, 6];
 
             for (int i = 0; URLResult.Length > i; i++) URLResult[i] = "https://www.youtube.com" + URLResult[i];
             for (int i = 0; PicResult.Length > i; i++) PicResult[i] = "https://" + PicResult[i];
             for (int i = 0; 20 > i; i++)
             {
-                if(PicResult[i] != "")
+                for(;PicResult.Length == 0;) PicResult = Utility.RegexToStringArr(".{27}mqdefault.jpg", Source);
+                if (PicResult[i] != "")
                 {
                     Utility.DownloadRemoteImageFile(PicResult[i], @"./\YoutubePictures\" + i + ".jpg");
                     PicResult[i] = @"./\YoutubePictures\" + i + ".jpg";
