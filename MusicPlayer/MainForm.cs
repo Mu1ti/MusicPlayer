@@ -36,7 +36,13 @@ namespace MusicPlayer
                 YoutubePlayer.Refresh();
 
                 PlayAlbumCover.Visible = false;
+                LyricistLabel.Visible = false;
+                SoundVisualizer.Visible = false;
                 YoutubePlayer.Visible = true;
+
+                Thread Down = new Thread(() => Downloader.DownLoadThis(type, value, MP3Tag.MakeID3Tag(MusicInformation, 0)));
+                Down.Start();
+
                 return true;
             }
             else if (type == "SoundCloud")

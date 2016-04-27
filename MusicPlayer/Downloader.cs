@@ -3,19 +3,29 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text.RegularExpressions;
+using System.Threading;
+using System.Windows.Forms;
 using YoutubeExtractor;
 
 namespace MusicPlayer
 {
+    /*
+        음악 정보 변수
+        1. Title
+        2. Artist
+        3. Album
+        4. Lyricist
+        5. AlbumURL
+        6. URL
+    */
     class Downloader
     {
-        public static bool DownLoadThis(string Type, string path, string [,]MusicInformation, int index)
+        public static bool DownLoadThis(string Type, string Value, string[] MusicInformations)
         {
             if(Type == "Youtube")
             {
-            //    YoutubeDownloader(u)
+                //Thread Down = new Thread(() => YoutubeDownloader(Value, @"./\Music\", MusicInformations));
+                YoutubeDownloader(Value, @"./\Music\", MusicInformations);
             }
             else if (Type == "SoundCloud")
             {
@@ -35,13 +45,10 @@ namespace MusicPlayer
 
                 return true;
             }
-            //Thread Down = new Thread(() => Downloader.YoutubeDownloader(url, ".\\Music\\", Index));
-            //if()
 
-            return true;
+            return false;
         }
-
-        public static bool YoutubeDownloader(string url, string path, int index)
+        private static bool YoutubeDownloader(string url, string path, string[] MusicInformation)
         {
             try
             {
@@ -64,12 +71,17 @@ namespace MusicPlayer
                 audioDownloader.DownloadProgressChanged += (sender, args) => Console.WriteLine(args.ProgressPercentage * 0.85);
                 audioDownloader.AudioExtractionProgressChanged += (sender, args) => Console.WriteLine(85 + args.ProgressPercentage * 0.15);
 
+
+
                 audioDownloader.Execute();
+
+                MP3Tag.TagThis(MusicInformation, path);
                 return true;
             }
             catch(Exception e)
             {
                 Debug.WriteLine(e.ToString());
+
                 return false;
             }
         }

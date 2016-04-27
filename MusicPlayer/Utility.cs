@@ -46,12 +46,23 @@ namespace MusicPlayer
         }
         public static string[] RegexToStringArr(string reg, string str)
         {
-            Regex Parsed = new Regex(reg, RegexOptions.IgnoreCase);
+            int i = 0;
+            string[] Result = new string[20];
+            foreach (Match match in Regex.Matches(str, reg,RegexOptions.None))
+            {
+                Result[i] = match.Value;
+                i++;
+            }
+            return Result;
+
+            /*
+            Regex Parsed = new Regex(reg, RegexOptions.Compiled);
             MatchCollection mc = Parsed.Matches(str);
             string[] Result = new string[mc.Count];
 
             for (int i = 0; mc.Count > i; i++) Result[i] = System.Web.HttpUtility.HtmlDecode(mc[i].ToString());
             return Result;
+            */
         }
         public static string GetSource(string url)
 
