@@ -24,7 +24,6 @@ namespace MusicPlayer
         {
             if(Type == "Youtube")
             {
-                //Thread Down = new Thread(() => YoutubeDownloader(Value, @"./\Music\", MusicInformations));
                 YoutubeDownloader(Value, @"./\Music\", MusicInformations);
             }
             else if (Type == "SoundCloud")
@@ -52,6 +51,7 @@ namespace MusicPlayer
         {
             try
             {
+                path = Utility.GetFolder(path);
                 IEnumerable<VideoInfo> videoInfos = DownloadUrlResolver.GetDownloadUrls(url, false);
                 VideoInfo video = videoInfos
                     .Where(info => info.CanExtractAudio)
@@ -71,10 +71,10 @@ namespace MusicPlayer
                 audioDownloader.DownloadProgressChanged += (sender, args) => Console.WriteLine(args.ProgressPercentage * 0.85);
                 audioDownloader.AudioExtractionProgressChanged += (sender, args) => Console.WriteLine(85 + args.ProgressPercentage * 0.15);
 
-
+                path = audioDownloader.SavePath;
 
                 audioDownloader.Execute();
-
+                
                 MP3Tag.TagThis(MusicInformation, path);
                 return true;
             }

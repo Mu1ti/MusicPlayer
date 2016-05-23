@@ -1,5 +1,7 @@
 ﻿using IdSharp.Tagging.ID3v2;
+using IdSharp.Tagging.ID3v2.Frames;
 using System.Drawing;
+using System.IO;
 
 namespace MusicPlayer
 {
@@ -14,28 +16,28 @@ namespace MusicPlayer
     */
     class MP3Tag
     {
-        public static bool TagThis(string[] MusicInformation, string Path)
+        public static void TagThis(string[] MusicInformation, string Path)
         {
-            try
+            if(File.Exists(Path) == true)
             {
+                string[] CrawlingResult = Crawling.ID3TagCrawlingResult(MusicInformation[1] + "-" + MusicInformation[0]);
+                if (CrawlingResult[0] == null) CrawlingResult = MusicInformation;
+
                 ID3v2Tag Information = new ID3v2Tag(Path);
-                Information.Title = MusicInformation[0];
-                Information.Artist = MusicInformation[1];
-                Information.Album = MusicInformation[2];
-                Information.Lyricist = MusicInformation[3];
-                Information.PictureList[0].Picture = Bitmap.FromFile(MusicInformation[5]);
+                IAttachedPicture Albume = Information.PictureList.AddNew();
 
+                Information.Title = CrawlingResult[0];
+                Information.Artist = CrawlingResult[1];
+                Information.Album = CrawlingResult[2];
+                Information.Lyricist = CrawlingResult[3];
+                if(File.Exists(CrawlingResult[4]) == true)
+                {
+                    Albume.Picture = Bitmap.FromFile(CrawlingResult[4]);
+                }
+                    
                 Information.Save(Path);
-                return true;
             }
-            catch
-            {
-                
-                return false;
-            }
-
-        }
-
+        } 
         public static string[] GetTag(string Path)
         {
             string[] MusicInformation = new string[6];
@@ -51,14 +53,14 @@ namespace MusicPlayer
         }
         public static string[] MakeID3Tag(string [,] MusicInformations, int index)
         {
-            string[] ResultInformation = new string[5];
+            string[] ResultInformation = new string[6];
 
             ResultInformation[0] = MusicInformations[index,0];
             ResultInformation[1] = MusicInformations[index,1];
             ResultInformation[2] = MusicInformations[index,2];
             ResultInformation[3] = MusicInformations[index,3];
             ResultInformation[4] = MusicInformations[index,4];
-
+            ResultInformation[5] = MusicInformations[index,5];
             return ResultInformation;
         }
     }

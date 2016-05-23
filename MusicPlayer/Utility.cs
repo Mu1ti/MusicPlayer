@@ -44,11 +44,11 @@ namespace MusicPlayer
             var Return = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
             return Return.Replace(path, "");
         }
-        public static string[] RegexToStringArr(string reg, string str)
+        public static string[] RegexToStringArr(string reg, string str, RegexOptions Option)
         {
             int i = 0;
             string[] Result = new string[20];
-            foreach (Match match in Regex.Matches(str, reg,RegexOptions.None))
+            foreach (Match match in Regex.Matches(str, reg, Option))
             {
                 Result[i] = match.Value;
                 i++;
@@ -68,10 +68,38 @@ namespace MusicPlayer
 
         {
             HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
-            HttpWebResponse response = (request.GetResponse() as HttpWebResponse);
+            HttpWebResponse response = request.GetResponse() as HttpWebResponse;
 
             StreamReader reader = new StreamReader(response.GetResponseStream());
             return reader.ReadToEnd();
+        }
+
+        public static string GetFolder(string Path)
+        {
+            if (Directory.Exists(Path) == false)
+                Directory.CreateDirectory(Path);
+            return Path;
+        }
+
+        public static string ExtractSongTitle(string KeyWord)
+        {
+            string song = null;
+            if (KeyWord.Contains("-")) song = KeyWord.Split('-')[1];
+            else song = KeyWord;
+
+            song = song.Trim();
+
+            return song;
+        }
+        public static string ExtractSongArtist(string KeyWord)
+        {
+            string song = null;
+            if (KeyWord.Contains("-")) song = KeyWord.Split('-')[0];
+            else song = KeyWord;
+
+            song = song.Trim();
+
+            return song;
         }
     }
 }

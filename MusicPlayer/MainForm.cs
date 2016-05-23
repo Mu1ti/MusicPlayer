@@ -16,6 +16,7 @@ namespace MusicPlayer
             5. AlbumURL
             6. URL
         */
+
         private Panel[] MusicItemPanel = new Panel[256];
         private PictureBox[] AlbumePicture = new PictureBox[256];
         private Label[] MusicInformationLabel = new Label[256];
@@ -37,8 +38,9 @@ namespace MusicPlayer
 
                 PlayAlbumCover.Visible = false;
                 LyricistLabel.Visible = false;
-                SoundVisualizer.Visible = false;
                 YoutubePlayer.Visible = true;
+
+                YoutubePlayer.Dock = DockStyle.Fill;
 
                 Thread Down = new Thread(() => Downloader.DownLoadThis(type, value, MP3Tag.MakeID3Tag(MusicInformation, 0)));
                 Down.Start();
@@ -85,10 +87,6 @@ namespace MusicPlayer
                 string url = indextext.Remove(0, urlstartposition);
 
                 PlayMusic("Youtube", url);
-
-                //Thread Down = new Thread(() => Downloader.YoutubeDownloader(url, ".\\Music\\", Index));
-                //Down.Start();
-
             }
 
 
@@ -163,7 +161,7 @@ namespace MusicPlayer
                 AlbumePicture[ListCount].Name = " " + ListCount + " ";
                 AlbumePicture[ListCount].Image = Image.FromFile(AlbumPath);
                 AlbumePicture[ListCount].SizeMode = PictureBoxSizeMode.StretchImage;
-                AlbumePicture[ListCount].Click += new System.EventHandler(MusicItemClicked);
+                AlbumePicture[ListCount].Click += new EventHandler(MusicItemClicked);
                 AlbumePicture[ListCount].MouseWheel += new MouseEventHandler(Scrolled);
                 MusicItemPanel[ListCount].Controls.Add(AlbumePicture[ListCount]);
 
@@ -230,28 +228,12 @@ namespace MusicPlayer
         private void SearchText_KeyPress(object sender, KeyPressEventArgs e)
         {
             if(SearchText.Text != null) {if (e.KeyChar == 13) SearchButton_Click(sender, e); }
-            
-        }
-        private void PlayIco_Click(object sender, EventArgs e)
-        {
-            MainForm_Resize(sender, e);
-
-            SearchPanel.Visible = false;
-            PlayPanel.Visible = true;
-        }
-        private void SearchIco_Click(object sender, EventArgs e)
-        {
-            MainForm_Resize(sender, e);
-
-            SearchPanel.Visible = true;
-            PlayPanel.Visible = false;
         }
         private void SearchButton_Click(object sender, EventArgs e)
         {
             if(SearchText.Text != "Search Here... (~￣▽￣)~")
             {
-                Crawling crawling = new Crawling( );
-                MusicInformation = crawling.CrawlingResult(SearchText.Text);
+                MusicInformation = Crawling.SearchCrawlingResult(SearchText.Text);
                 for (int i = 0; (MusicInformation.Length / 6) > i; i++)
                     CreateMusicItem(
                         MusicInformation[i,0], 
@@ -267,112 +249,41 @@ namespace MusicPlayer
         private void MainForm_Resize(object sender, EventArgs e)
         {
 
-            //*******************************************
-            //*              Panels Resize              *
-            //*******************************************
-            
-            LeftPanel.Width = (int)(Width * 0.1);
-            PlayBar.Left = LeftPanel.Width;
-            PlayBar.Width = Width - PlayBar.Left - 15;
-            PlayBar.Top = Height - PlayBar.Height - 39;
-
-            PlayPanel.Top = 0;
-            PlayPanel.Left = LeftPanel.Width;
-            PlayPanel.Width = Width - PlayPanel.Left - 15;
-            PlayPanel.Height = PlayBar.Top;
-
-            SearchPanel.Top = 0;
-            SearchPanel.Left = LeftPanel.Width;
-            SearchPanel.Width = Width - SearchPanel.Left - 15;
-            SearchPanel.Height = PlayBar.Top;
-
-            SettingPanel.Top = 0;
-            SettingPanel.Left = LeftPanel.Width;
-            SettingPanel.Width = Width - SettingPanel.Left - 15;
-            SettingPanel.Height = PlayBar.Top - 39;
-            
-            PlayListPanel.Top = 0;
-            PlayListPanel.Left = LeftPanel.Width;
-            PlayListPanel.Width = Width - PlayListPanel.Left - 15;
-            PlayListPanel.Height = PlayBar.Top;
-            
-            NowPlayList.Top = SettingIco.Top + SettingIco.Height;
-            NowPlayList.Height = Width - NowPlayList.Top;
-            NowPlayList.Width = LeftPanel.Width;
-
-            //*******************************************
-            //*        PlayPanel Items Resize           *
-            //*******************************************
-
-            LyricistLabel.Top = 0;
-            LyricistLabel.Left = 0;
-            LyricistLabel.Height = PlayPanel.Height;
-            LyricistLabel.Width = PlayPanel.Width;
-
-            PlayAlbumCover.Top = 0;
-            PlayAlbumCover.Left = 0;
-            PlayAlbumCover.Height = PlayPanel.Height;
-            PlayAlbumCover.Width = PlayPanel.Width;
-
-            YoutubePlayer.Top = 0;
-            YoutubePlayer.Left = 0;
-            YoutubePlayer.Height = PlayPanel.Height;
-            YoutubePlayer.Width = PlayPanel.Width;
-
-            SoundVisualizer.Top = 0;
-            SoundVisualizer.Left = 0;
-            SoundVisualizer.Height = PlayPanel.Height;
-            SoundVisualizer.Width = PlayPanel.Width;
-
-            //*******************************************
-            //*        SearchPanel Item Resize          *
-            //*******************************************
-
-            SearchText.Left = 0;
-            SearchText.Width = (int)(SearchPanel.Width * 0.9);
-            SearchButton.Left = SearchText.Width;
-            SearchButton.Width = SearchPanel.Width - SearchButton.Left;
-
-            MusicListPanel.Top = SearchText.Height;
-            MusicListPanel.Left = SearchText.Left;
-            MusicListPanel.Width = SearchPanel.Width;
-            MusicListPanel.Height = PlayBar.Top;
-
-            //*******************************************
-            //*       PlayListPanel Item Resize         *
-            //*******************************************
-
-
-
-            //*******************************************
-            //*        SettingPanel Item Resize         *
-            //*******************************************
-
-
-
-            //*******************************************
-            //*        PlayBarPanel Item Resize         *
-            //*******************************************
-
-            NowPlayInformationLabel.Left = 20;
-            NowPlayInformationText.Left = NowPlayInformationLabel.Left + NowPlayInformationLabel.Width + 5;
-            NowPlayInformationText.Width = StopButton.Left - NowPlayInformationText.Left - 10;
-            PlayButton.Left = (int)((PlayBar.Width * 0.5) - (PlayButton.Width * 0.5));
-            StopButton.Left = PlayButton.Left - StopButton.Width - 6;
-            NextButton.Left = PlayButton.Left + PlayButton.Width + 6;
-            VolumeBar.Left = PlayBar.Width - VolumeBar.Width - 20;
-            VolumeButton.Left = VolumeBar.Left - VolumeButton.Width - 6;
-
-            //*******************************************
-            //*         SearchPanel Item Resize         *
-            //*******************************************
-            
-            for( int i = 0; MusicItemPanel[i] != null; i++ ){
-                MusicItemPanel[i].Width = MusicListBar.Left;
-                MusicInformationText[i].Width = MusicItemPanel[i].Width - 20;
-            }
-
         }
         #endregion
+
+        private void TitlebarPanel_MouseDown(object sender, MouseEventArgs e)
+        {
+            var s = sender as Panel;
+            s.Tag = new Point(e.X, e.Y);
+        }
+        private void TitlebarPanel_MouseMove(object sender, MouseEventArgs e)
+        {
+            var s = sender as Panel;
+            if (e.Button != System.Windows.Forms.MouseButtons.Left)
+                return;
+
+            s.Parent.Left = this.Left + (e.X - ((Point)s.Tag).X);
+            s.Parent.Top = this.Top + (e.Y - ((Point)s.Tag).Y);
+        }
+
+        private void MusicSearchButton_Click(object sender, EventArgs e)
+        {
+            MainTabControl.SelectedTab = SearchTabPage;
+        }
+
+        private void HomeButton_Click(object sender, EventArgs e)
+        {
+            MainTabControl.SelectedTab = DashBoardTabPage;
+        }
+        private void MusicPlayButton_Click(object sender, EventArgs e)
+        {
+            MainTabControl.SelectedTab = PlayTabPage;
+        }
+        private void CloseButton_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
     }
 }
