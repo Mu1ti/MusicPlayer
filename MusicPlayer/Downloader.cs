@@ -2,29 +2,20 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
-using System.Threading;
-using System.Windows.Forms;
+using System.Net;
 using YoutubeExtractor;
 
 namespace MusicPlayer
 {
-    /*
-        음악 정보 변수
-        1. Title
-        2. Artist
-        3. Album
-        4. Lyricist
-        5. AlbumURL
-        6. URL
-    */
     class Downloader
     {
-        public static bool DownLoadThis(string Type, string Value, string[] MusicInformations)
+        public static bool DownLoadThis(string Type, string Value, MusicInformation MusicInfo)
         {
             if(Type == "Youtube")
             {
-                YoutubeDownloader(Value, @"./\Music\", MusicInformations);
+                YoutubeDownloader(Value, @"./\Music\", MusicInfo);
             }
             else if (Type == "SoundCloud")
             {
@@ -44,10 +35,13 @@ namespace MusicPlayer
 
                 return true;
             }
-
+            else if (Type == "BloodCat")
+            {
+                BloodCatDownloader(Value.Split('\x01')[0], Value.Split('\x01')[1], MusicInfo);
+            }
             return false;
         }
-        private static bool YoutubeDownloader(string url, string path, string[] MusicInformation)
+        private static bool YoutubeDownloader(string url, string path, MusicInformation MusicInfo)
         {
             try
             {
@@ -75,13 +69,51 @@ namespace MusicPlayer
 
                 audioDownloader.Execute();
                 
-                MP3Tag.TagThis(MusicInformation, path);
+                MP3Tag.TagThis(MusicInfo, path);
                 return true;
             }
             catch(Exception e)
             {
                 Debug.WriteLine(e.ToString());
 
+                return false;
+            }
+        }
+        private static bool BloodCatDownloader(string url, string path, MusicInformation MusicInfo)
+        {
+            try
+            {
+                HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
+                HttpWebResponse response = request.GetResponse() as HttpWebResponse;
+
+                StreamReader reader = new StreamReader(response.GetResponseStream());
+
+                var zip = new ZipArchive(reader.BaseStream, ZipArchiveMode.Read);
+                path = path + MusicInfo.Artist + " - " + MusicInfo.Title + ".mp3";
+
+                foreach (var entry in zip.Entries)
+                {
+                    if (entry.FullName.Contains(".mp3"))
+                    {
+                        StreamReader MP3File = new StreamReader(entry.Open());
+                        FileStream SaveFile = new FileStream(path, FileMode.CreateNew);
+                        MemoryStream ms = new MemoryStream();
+
+                        MP3File.BaseStream.CopyTo(ms);
+                        byte[] Contents = ms.ToArray();
+
+                        SaveFile.Write(Contents, 0, Contents.Length);
+                        SaveFile.Flush();
+                        SaveFile.Close();
+
+                        break;
+                    }
+                }
+                MP3Tag.TagThis(MusicInfo, path);
+                return true;
+            }
+            catch(Exception)
+            {
                 return false;
             }
         }

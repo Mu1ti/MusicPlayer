@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -7,37 +8,6 @@ namespace MusicPlayer
 {
     class Utility
     {
-        public static bool DownloadRemoteImageFile(string uri, string fileName)
-        {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-            bool bImage = response.ContentType.StartsWith("image",
-                StringComparison.OrdinalIgnoreCase);
-            if ((response.StatusCode == HttpStatusCode.OK ||
-                response.StatusCode == HttpStatusCode.Moved ||
-                response.StatusCode == HttpStatusCode.Redirect) &&
-                bImage)
-            {
-                using (Stream inputStream = response.GetResponseStream())
-                using (Stream outputStream = File.OpenWrite(fileName))
-                {
-                    byte[] buffer = new byte[4096];
-                    int bytesRead;
-                    do
-                    {
-                        bytesRead = inputStream.Read(buffer, 0, buffer.Length);
-                        outputStream.Write(buffer, 0, bytesRead);
-                    } while (bytesRead != 0);
-                }
-
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
         public static string RemoveIllegalPathCharacters(string path)
         {
             string regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
@@ -46,32 +16,39 @@ namespace MusicPlayer
         }
         public static string[] RegexToStringArr(string reg, string str, RegexOptions Option)
         {
-            int i = 0;
-            string[] Result = new string[20];
-            foreach (Match match in Regex.Matches(str, reg, Option))
+            try
             {
-                Result[i] = match.Value;
-                i++;
+                int i = 0;
+
+                string[] Result = new string[Regex.Matches(str, reg, Option).Count];
+                if (Result.Length == 0) Result = new string[1];
+                foreach (Match match in Regex.Matches(str, reg, Option))
+                {
+                    Result[i] = match.Value;
+                    i++;
+                }
+                return Result;
             }
-            return Result;
-
-            /*
-            Regex Parsed = new Regex(reg, RegexOptions.Compiled);
-            MatchCollection mc = Parsed.Matches(str);
-            string[] Result = new string[mc.Count];
-
-            for (int i = 0; mc.Count > i; i++) Result[i] = System.Web.HttpUtility.HtmlDecode(mc[i].ToString());
-            return Result;
-            */
+            catch (Exception)
+            {
+                string[] Result = new string[1];
+                return Result;
+            }
         }
         public static string GetSource(string url)
-
         {
-            HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
-            HttpWebResponse response = request.GetResponse() as HttpWebResponse;
+            try
+            {
+                HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
+                HttpWebResponse response = request.GetResponse() as HttpWebResponse;
 
-            StreamReader reader = new StreamReader(response.GetResponseStream());
-            return reader.ReadToEnd();
+                StreamReader reader = new StreamReader(response.GetResponseStream());
+                return reader.ReadToEnd();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         public static string GetFolder(string Path)
@@ -95,11 +72,47 @@ namespace MusicPlayer
         {
             string song = null;
             if (KeyWord.Contains("-")) song = KeyWord.Split('-')[0];
-            else song = KeyWord;
 
             song = song.Trim();
 
             return song;
+        }
+        public static string ExtractSongFileName(MusicInformation MusicInfo)
+        {
+            return MusicInfo.Artist + " - " + MusicInfo.Title + ".mp3";
+        }
+        public static Bitmap GetAlbumBitmapImage(string url)
+        {
+            try
+            {
+                WebRequest request =
+                WebRequest.Create(
+                url);
+                WebResponse response = request.GetResponse();
+                Stream responseStream =
+                    response.GetResponseStream();
+                Bitmap bitmap2 = new Bitmap(responseStream);
+                return bitmap2;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
+        }
+
+        public static string GetYoutubePlaySource(string URL)
+        {
+            string htmlSrc = "<html><head><meta charset='UTF-8'></head><body style='margin:0px;padding:0px;'><div style='margin:0px;padding:0px;'><embed src='https://www.youtube.com/v/" + URL.Split('=')[1] + "?rel=0&showinfo=0&version=3&amp;hl=ko_KR&amp;vq=hd720&autoplay=1&controls=0&frameborder=0' type='application/x-shockwave-flash' width='100%' height='100%' ='always' allowfullscreen='true'></embed></div></body></html>";
+            return htmlSrc;
+        }
+
+        public static int GetDurationMP3File(string Path)
+        {
+            WMPLib.WindowsMediaPlayer wmp = new WMPLib.WindowsMediaPlayer();
+            WMPLib.IWMPMedia mp3file = wmp.newMedia(Path);
+
+            return (int)mp3file.duration;
         }
     }
 }

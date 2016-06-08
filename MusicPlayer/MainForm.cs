@@ -2,38 +2,66 @@
 using System.Drawing;
 using System.Windows.Forms;
 using System.Threading;
+using WMPLib;
+using System.IO;
+using System.Diagnostics;
+using System.Net;
+using System.IO.Compression;
 
 namespace MusicPlayer
 {
+    /* TO DO List
+     * PlayList 만들기 (포맷 :: Title / URL or Path)
+     * 스킨 기능
+     * PlayList 재생 기능
+     * Setting.ini 파일도 만들어야댐 ㅋㅋ
+    */
+    struct MusicInformation
+    {
+        public string Title;
+        public string Artist;
+        public string Album;
+        public string Lyricist;
+        public Bitmap AlbumImage;
+        public string URL;
+        public int PlayTime;
+    }
+    struct MusicPlayList
+    {
+        public int Number;
+        public string TItle;
+        public string PlayTime;
+        public string URL;
+    }
+    struct SearchResult
+    {
+        public Panel ItemPanel;
+        public PictureBox AlbumePicture;
+        public Label InformationLabel;
+        public TextBox InformationText;
+    }
     public partial class MainForm : Form
     {
-        /*
-            음악 정보 변수
-            1. Title
-            2. Artist
-            3. Album
-            4. Lyricist
-            5. AlbumURL
-            6. URL
-        */
-
-        private Panel[] MusicItemPanel = new Panel[256];
-        private PictureBox[] AlbumePicture = new PictureBox[256];
-        private Label[] MusicInformationLabel = new Label[256];
-        private TextBox[] MusicInformationText = new TextBox[256];
-        public static string[,] MusicInformation;
+        private SearchResult[] MusicItems = new SearchResult[256];
+        private MusicInformation[] MusicInfoItems = new MusicInformation[20];
+        private MusicPlayList[] NowPlayListItems = new MusicPlayList[256];
+        private MusicInformation MusicInfo = new MusicInformation();
+        private int SelectedMusic = 0;
         int ListCount = 0;
-        
-        private string Play_Youtube(string URL)
+        WindowsMediaPlayer Player;
+
+        public MainForm()
         {
-            string htmlSrc = "<html><head><meta charset='UTF-8'></head><body style='margin:0px;padding:0px;'><div style='margin:0px;padding:0px;'><embed src='https://www.youtube.com/v/"+URL.Split('=')[1]+"?rel=0&showinfo=0&version=3&amp;hl=ko_KR&amp;vq=hd720&autoplay=1&controls=0&frameborder=0' type='application/x-shockwave-flash' width='100%' height='100%' ='always' allowfullscreen='true'></embed></div></body></html>";
-            return htmlSrc;
+            Player = new WindowsMediaPlayer();
+            InitializeComponent();
         }
+        
         private bool PlayMusic(string type, string value)
         {
+
             if (type == "Youtube")
             {
-                YoutubePlayer.Document.Write(Play_Youtube(value));
+                YoutubePlayer.Document.Write(Utility.GetYoutubePlaySource(value));
                 YoutubePlayer.Refresh();
 
                 PlayAlbumCover.Visible = false;
@@ -42,7 +70,7 @@ namespace MusicPlayer
 
                 YoutubePlayer.Dock = DockStyle.Fill;
 
-                Thread Down = new Thread(() => Downloader.DownLoadThis(type, value, MP3Tag.MakeID3Tag(MusicInformation, 0)));
+                Thread Down = new Thread(() => Downloader.DownLoadThis(type, value, MusicInfo));
                 Down.Start();
 
                 return true;
@@ -55,8 +83,8 @@ namespace MusicPlayer
             }
             else if (type == "LocalMp3")
             {
-
-
+                AddNowPlayList(Utility.ExtractSongFileName(MusicInfo), Utility.GetDurationMP3File(value));
+                PlayLocalMP3(value);
                 return true;
             }
             else if (type == "Mp3Site")
@@ -65,11 +93,57 @@ namespace MusicPlayer
 
                 return true;
             }
+            else if (type == "BloodCat")
+            {
+                string path = Environment.GetEnvironmentVariable("USERPROFILE") + @"\AppData\Local\Temp\";
+                string title = Utility.ExtractSongFileName(MusicInfo);
+                Downloader.DownLoadThis(type, value + '\x01' + path, MusicInfo);
+                AddNowPlayList(title, Utility.GetDurationMP3File(path+title));
+                PlayLocalMP3(path + Utility.ExtractSongFileName(MusicInfo));
+            }
+            else if (type == "BGMStore")
+            {
+
+                return true;
+            }
             return false;
         }
-        
 
-          #region Controls Events
+        #region MusicPlay Functions
+
+        private void PlayLocalMP3(string Path)
+        {
+            MusicInfo = MP3Tag.GetTag(Path);
+            ShowMusicInfo(MusicInfo);
+
+            Player.controls.stop();
+            Player = new WindowsMediaPlayer();
+            Player.URL = Path;
+            Player.controls.play();
+
+            HighLightPlayListItem(SelectedMusic);
+
+            SelectedMusic++;
+        }
+        private void ShowMusicInfo(MusicInformation MusicInfo_)
+        {
+            NowPlayInformationText.Text = MusicInfo_.Artist + "\r\n" + MusicInfo_.Album + "\r\n" + MusicInfo_.Title;
+        }
+
+        #endregion
+
+        #region Initializations
+        private void SettingInitialize()
+        {
+            SettingInformation SettingInfo = Setting.LoadSetting();
+
+            
+        }
+        #endregion
+
+
+
+        #region Controls Events
 
         //*******************************************
         //*        Custom Controls Events           *
@@ -78,7 +152,7 @@ namespace MusicPlayer
         private void MusicItemClicked(object sender, EventArgs e)
         {
             int Index = Convert.ToInt32(((PictureBox)sender).Name.Trim());
-            string indextext = MusicInformationText[Index].Text;
+            string indextext = MusicItems[Index].InformationText.Text;
 
             if(indextext.Contains("youtube"))
             {
@@ -88,19 +162,27 @@ namespace MusicPlayer
 
                 PlayMusic("Youtube", url);
             }
+            else if(indextext.Contains("bloodcat"))
+            {
+                //BloodCat Item
+                int urlstartposition = indextext.LastIndexOf("http://");
+                string url = indextext.Remove(0, urlstartposition);
+                
 
+                PlayMusic("BloodCat", url);
+            }
 
         }
         private void Scrolled(object sender, MouseEventArgs e)
         {
             if (e.Delta > 0)
             {
-                for (int i = 0; MusicItemPanel[i] != null; i++)
+                for (int i = 0; MusicItems[i].ItemPanel != null; i++)
                 {
-                    MusicItemPanel[i].Top = MusicItemPanel[i].Top + MusicItemPanel[i].Height;
-                    if (MusicItemPanel[0].Top > 0)
+                    MusicItems[i].ItemPanel.Top = MusicItems[i].ItemPanel.Top + MusicItems[i].ItemPanel.Height;
+                    if (MusicItems[0].ItemPanel.Top > 0)
                     {
-                        MusicItemPanel[i].Top = MusicItemPanel[i].Top - MusicItemPanel[i].Height;
+                        MusicItems[i].ItemPanel.Top = MusicItems[i].ItemPanel.Top - MusicItems[i].ItemPanel.Height;
                         break;
                     }
                 }
@@ -108,8 +190,8 @@ namespace MusicPlayer
             }
             else
             {
-                for (int i = 0; MusicItemPanel[i] != null; i++)
-                    MusicItemPanel[i].Top = MusicItemPanel[i].Top - MusicItemPanel[i].Height;
+                for (int i = 0; MusicItems[i].ItemPanel != null; i++)
+                    MusicItems[i].ItemPanel.Top = MusicItems[i].ItemPanel.Top - MusicItems[i].ItemPanel.Height;
                 MusicListBar.Value++;
             }
         }
@@ -119,71 +201,71 @@ namespace MusicPlayer
             {
                 for (int i = 0; ListCount > i; i++)
                 {
-                    MusicItemPanel[i] = new Panel();
-                    AlbumePicture[i] = new PictureBox();
-                    MusicInformationLabel[i] = new Label();
-                    MusicInformationText[i] = new TextBox();
+                    MusicItems[i].ItemPanel = new Panel();
+                    MusicItems[i].AlbumePicture = new PictureBox();
+                    MusicItems[i].InformationLabel = new Label();
+                    MusicItems[i].InformationText = new TextBox();
                 }
                 ListCount = 0;
                 return true;
             }
-            catch(Exception e)
+            catch(Exception)
             {
                 return false;
             }
 
         }
-        private bool CreateMusicItem(string Title, string Artist, string Album, string Lyricist, string AlbumPath, string URL)
+        private bool CreateMusicItem(string Title, string Artist, string Album, Bitmap AlbumImage, string URL)
         {
             try
             {
-                MusicItemPanel[ListCount] = new Panel();
-                AlbumePicture[ListCount] = new PictureBox();
-                MusicInformationLabel[ListCount] = new Label();
-                MusicInformationText[ListCount] = new TextBox();
+                MusicItems[ListCount].ItemPanel = new Panel();
+                MusicItems[ListCount].AlbumePicture = new PictureBox();
+                MusicItems[ListCount].InformationLabel = new Label();
+                MusicItems[ListCount].InformationText = new TextBox();
                 
-                if (ListCount <= 0) MusicItemPanel[ListCount].Top = 0;
-                else MusicItemPanel[ListCount].Top = MusicItemPanel[ListCount - 1].Top + MusicItemPanel[ListCount - 1].Height;
-                MusicItemPanel[ListCount].Left = 0;
-                MusicItemPanel[ListCount].Width = MusicListBar.Left;
-                MusicItemPanel[ListCount].Height = 100;
-                MusicItemPanel[ListCount].BackColor = Color.AntiqueWhite;
-                MusicItemPanel[ListCount].BorderStyle = BorderStyle.FixedSingle;
-                MusicItemPanel[ListCount].MouseWheel += new MouseEventHandler(Scrolled);
-                MusicListPanel.Controls.Add(MusicItemPanel[ListCount]);
+                if (ListCount <= 0) MusicItems[ListCount].ItemPanel.Top = 0;
+                else MusicItems[ListCount].ItemPanel.Top = MusicItems[ListCount - 1].ItemPanel.Top + MusicItems[ListCount - 1].ItemPanel.Height;
+                MusicItems[ListCount].ItemPanel.Left = 0;
+                MusicItems[ListCount].ItemPanel.Width = MusicListBar.Left;
+                MusicItems[ListCount].ItemPanel.Height = 100;
+                MusicItems[ListCount].ItemPanel.BackColor = Color.AntiqueWhite;
+                MusicItems[ListCount].ItemPanel.BorderStyle = BorderStyle.FixedSingle;
+                MusicItems[ListCount].ItemPanel.MouseWheel += new MouseEventHandler(Scrolled);
+                MusicListPanel.Controls.Add(MusicItems[ListCount].ItemPanel);
 
-                AlbumePicture[ListCount].Left = 3;
-                AlbumePicture[ListCount].Top = 3;
-                AlbumePicture[ListCount].Width = 100 - 6;
-                AlbumePicture[ListCount].Height = 100 - 6;
-                if (AlbumPath == null) AlbumePicture[ListCount].BackgroundImage = Properties.Resources.NoImage;
-                AlbumePicture[ListCount].BackgroundImageLayout = ImageLayout.Stretch;
-                AlbumePicture[ListCount].Name = " " + ListCount + " ";
-                AlbumePicture[ListCount].Image = Image.FromFile(AlbumPath);
-                AlbumePicture[ListCount].SizeMode = PictureBoxSizeMode.StretchImage;
-                AlbumePicture[ListCount].Click += new EventHandler(MusicItemClicked);
-                AlbumePicture[ListCount].MouseWheel += new MouseEventHandler(Scrolled);
-                MusicItemPanel[ListCount].Controls.Add(AlbumePicture[ListCount]);
+                MusicItems[ListCount].AlbumePicture.Left = 3;
+                MusicItems[ListCount].AlbumePicture.Top = 3;
+                MusicItems[ListCount].AlbumePicture.Width = 100 - 6;
+                MusicItems[ListCount].AlbumePicture.Height = 100 - 6;
+                if (AlbumImage == null) MusicItems[ListCount].AlbumePicture.BackgroundImage = Properties.Resources.NoImage;
+                MusicItems[ListCount].AlbumePicture.BackgroundImageLayout = ImageLayout.Stretch;
+                MusicItems[ListCount].AlbumePicture.Name = " " + ListCount + " ";
+                MusicItems[ListCount].AlbumePicture.Image = AlbumImage;
+                MusicItems[ListCount].AlbumePicture.SizeMode = PictureBoxSizeMode.StretchImage;
+                MusicItems[ListCount].AlbumePicture.Click += new EventHandler(MusicItemClicked);
+                MusicItems[ListCount].AlbumePicture.MouseWheel += new MouseEventHandler(Scrolled);
+                MusicItems[ListCount].ItemPanel.Controls.Add(MusicItems[ListCount].AlbumePicture);
 
-                MusicInformationLabel[ListCount].Left = AlbumePicture[ListCount].Left + AlbumePicture[ListCount].Width + 10;
-                MusicInformationLabel[ListCount].Top = AlbumePicture[ListCount].Top + 5;
-                MusicInformationLabel[ListCount].AutoSize = true;
-                MusicInformationLabel[ListCount].Text = "Title :\r\n\r\nArtist :\r\n\r\nAlbume :\r\n\r\nURL :";
-                MusicInformationLabel[ListCount].TextAlign = ContentAlignment.TopRight;
-                MusicInformationLabel[ListCount].MouseWheel += new MouseEventHandler(Scrolled);
-                MusicItemPanel[ListCount].Controls.Add(MusicInformationLabel[ListCount]);
+                MusicItems[ListCount].InformationLabel.Left = MusicItems[ListCount].AlbumePicture.Left + MusicItems[ListCount].AlbumePicture.Width + 10;
+                MusicItems[ListCount].InformationLabel.Top = MusicItems[ListCount].AlbumePicture.Top + 5;
+                MusicItems[ListCount].InformationLabel.AutoSize = true;
+                MusicItems[ListCount].InformationLabel.Text = "Title :\r\n\r\nArtist :\r\n\r\nAlbume :\r\n\r\nURL :";
+                MusicItems[ListCount].InformationLabel.TextAlign = ContentAlignment.TopRight;
+                MusicItems[ListCount].InformationLabel.MouseWheel += new MouseEventHandler(Scrolled);
+                MusicItems[ListCount].ItemPanel.Controls.Add(MusicItems[ListCount].InformationLabel);
 
-                MusicInformationText[ListCount].Left = MusicInformationLabel[ListCount].Left + MusicInformationLabel[ListCount].Width + 5;
-                MusicInformationText[ListCount].Top = MusicInformationLabel[ListCount].Top + 1;
-                MusicInformationText[ListCount].Height = MusicInformationLabel[ListCount].Height;
-                MusicInformationText[ListCount].Width = MusicItemPanel[ListCount].Width - MusicInformationText[ListCount].Left - 10;
-                MusicInformationText[ListCount].Multiline = true;
-                MusicInformationText[ListCount].Text = Title + "\r\n\r\n" + Artist + "\r\n\r\n" + Album + "\r\n\r\n" + URL;
-                MusicInformationText[ListCount].BorderStyle = BorderStyle.None;
-                MusicInformationText[ListCount].BackColor = MusicItemPanel[ListCount].BackColor;
-                MusicInformationText[ListCount].ReadOnly = true;
-                MusicInformationText[ListCount].MouseWheel += new MouseEventHandler(Scrolled);
-                MusicItemPanel[ListCount].Controls.Add(MusicInformationText[ListCount]);
+                MusicItems[ListCount].InformationText.Left = MusicItems[ListCount].InformationLabel.Left + MusicItems[ListCount].InformationLabel.Width + 5;
+                MusicItems[ListCount].InformationText.Top = MusicItems[ListCount].InformationLabel.Top + 1;
+                MusicItems[ListCount].InformationText.Height = MusicItems[ListCount].InformationLabel.Height;
+                MusicItems[ListCount].InformationText.Width = MusicItems[ListCount].ItemPanel.Width - MusicItems[ListCount].InformationText.Left - 10;
+                MusicItems[ListCount].InformationText.Multiline = true;
+                MusicItems[ListCount].InformationText.Text = Title + "\r\n\r\n" + Artist + "\r\n\r\n" + Album + "\r\n\r\n" + URL;
+                MusicItems[ListCount].InformationText.BorderStyle = BorderStyle.None;
+                MusicItems[ListCount].InformationText.BackColor = MusicItems[ListCount].ItemPanel.BackColor;
+                MusicItems[ListCount].InformationText.ReadOnly = true;
+                MusicItems[ListCount].InformationText.MouseWheel += new MouseEventHandler(Scrolled);
+                MusicItems[ListCount].ItemPanel.Controls.Add(MusicItems[ListCount].InformationText);
                 
                 ListCount++;
                 return true;
@@ -195,19 +277,54 @@ namespace MusicPlayer
             }
 
         }
+        private void HighLightPlayListItem(int Index)
+        {
+            for(int i = 0; NowPlayList.Items.Count > i;i++)
+            {
+                if(NowPlayList.Items[i].BackColor == Color.Black)
+                {
+                    NowPlayList.Items[i].BackColor = Color.White;
+                    NowPlayList.Items[i].ForeColor = Color.Black;
+                }
+            }
+            NowPlayList.Items[Index].ForeColor = Color.LightGoldenrodYellow;
+            NowPlayList.Items[Index].BackColor = Color.Black;
+        }
+        private void UnHighLightPlayListItem()
+        {
+            for (int i = 0; NowPlayList.Items.Count > i; i++)
+            {
+                if (NowPlayList.Items[i].BackColor == Color.Black)
+                {
+                    NowPlayList.Items[i].BackColor = Color.White;
+                    NowPlayList.Items[i].ForeColor = Color.Black;
+                }
+            }
+        }
+        private void AddNowPlayList(string Title, int SongLenght)
+        {
+            ListViewItem item = new ListViewItem();
+            string lenght = TimeSpan.FromSeconds((double)SongLenght).ToString(@"mm\:ss");
+
+            item.Text = (NowPlayList.Items.Count+1).ToString();
+
+            item.SubItems.Add(Title);
+            item.SubItems.Add(lenght);
+            NowPlayList.Items.Add(item);
+        }
 
         //*******************************************
         //*           Controls Events               *
         //*******************************************
 
-        public MainForm()
-        {
-            InitializeComponent();
-        }
         private void MainForm_Load(object sender, EventArgs e)
         {
             MainForm_Resize(sender, e);
             MusicListPanel.MouseWheel += new MouseEventHandler(Scrolled);
+        }
+        private void MainForm_Resize(object sender, EventArgs e)
+        {
+
         }
         private void SearchText_Enter(object sender, EventArgs e)
         {
@@ -233,25 +350,20 @@ namespace MusicPlayer
         {
             if(SearchText.Text != "Search Here... (~￣▽￣)~")
             {
-                MusicInformation = Crawling.SearchCrawlingResult(SearchText.Text);
-                for (int i = 0; (MusicInformation.Length / 6) > i; i++)
+                MusicInfoItems = Crawling.SearchCrawlingResult(SearchText.Text);
+                for (int i = 0; (MusicInfoItems.Length) > i; i++)
                     CreateMusicItem(
-                        MusicInformation[i,0], 
-                        MusicInformation[i,1],
-                        MusicInformation[i,2],
-                        MusicInformation[i,3],
-                        MusicInformation[i,4],
-                        MusicInformation[i,5]);
+                        MusicInfoItems[i].Title,
+                        MusicInfoItems[i].Artist,
+                        MusicInfoItems[i].Album,
+                        MusicInfoItems[i].AlbumImage,
+                        MusicInfoItems[i].URL);
                 MusicListBar.Maximum = ListCount;
                 MusicListBar.Value = 0;
             }
+            MusicInfo = Crawling.ID3TagCrawlingResult(SearchText.Text);
+            if (MusicInfo.Title == null) MusicInfo = MusicInfoItems[0];
         }
-        private void MainForm_Resize(object sender, EventArgs e)
-        {
-
-        }
-        #endregion
-
         private void TitlebarPanel_MouseDown(object sender, MouseEventArgs e)
         {
             var s = sender as Panel;
@@ -266,12 +378,10 @@ namespace MusicPlayer
             s.Parent.Left = this.Left + (e.X - ((Point)s.Tag).X);
             s.Parent.Top = this.Top + (e.Y - ((Point)s.Tag).Y);
         }
-
         private void MusicSearchButton_Click(object sender, EventArgs e)
         {
             MainTabControl.SelectedTab = SearchTabPage;
         }
-
         private void HomeButton_Click(object sender, EventArgs e)
         {
             MainTabControl.SelectedTab = DashBoardTabPage;
@@ -284,6 +394,97 @@ namespace MusicPlayer
         {
             Application.Exit();
         }
+        private void MusicPlayTimer_Tick(object sender, EventArgs e)
+        {
+            if(Player.URL != "")
+            {
+                double duration = Player.controls.currentItem.duration;
+
+                SongLenghtBar.Maximum = (int)Player.controls.currentItem.duration;
+                SongLenghtBar.Value = (int)Player.controls.currentPosition;
+                if (SongLenghtBar.Maximum == SongLenghtBar.Value && SongLenghtBar.Maximum != 0)
+                {
+                    if (NowPlayList.Items.Count > SelectedMusic) PlayLocalMP3(NowPlayListItems[SelectedMusic].URL);
+                    else { Player.controls.stop(); UnHighLightPlayListItem(); NowPlayInformationText.Text = ""; SelectedMusic = 0; }
+                }
+            }
+        }
+        private void NowPlayList_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] file = (string[])e.Data.GetData(DataFormats.FileDrop);
+                int i = 0;
+                Array.Sort(file);
+                foreach (string str in file)
+                {
+                    ListViewItem PlayListItem = new ListViewItem((NowPlayList.Items.Count + 1).ToString());
+                    PlayListItem.SubItems.Add(Path.GetFileName(str));
+                    PlayListItem.SubItems.Add("[??:??]");
+
+                    NowPlayList.Items.Add(PlayListItem);
+
+                    NowPlayListItems[i].Number = i;
+                    NowPlayListItems[i].TItle = Path.GetFileName(str);
+                    NowPlayListItems[i].URL = str;
+                    NowPlayListItems[i].PlayTime = "?";
+                    i++;
+                }
+            }
+        }
+        private void NowPlayList_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy | DragDropEffects.Scroll;
+            }
+        }
+        private void NowPlayList_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            SelectedMusic = Convert.ToInt32(NowPlayList.FocusedItem.SubItems[0].Text) - 1;
+            PlayButton_Click(sender,e);
+        }
+        private void PlayButton_Click(object sender, EventArgs e)
+        {
+            if(Player.status.Contains("재생"))
+            {
+                PlayButton.Image = Properties.Resources.Start;
+                Player.controls.pause();
+            }
+            else if(Player.status.Contains("일시"))
+            {
+                PlayButton.Image = Properties.Resources.Pause;
+                Player.controls.play();
+            }
+            else if(Player.status == "")
+            {
+                PlayButton.Image = Properties.Resources.Pause;
+                PlayLocalMP3(NowPlayListItems[SelectedMusic].URL);
+            }
+
+        }
+        private void StopButton_Click(object sender, EventArgs e)
+        {
+            Player.controls.stop();// = new WindowsMediaPlayer();
+            MusicInfo = new MusicInformation();
+            SelectedMusic--;
+        }
+        private void SongLenghtBar_Scroll(object sender, EventArgs e)
+        {
+            Player.controls.currentPosition = SongLenghtBar.Value;
+        }
+        private void VolumeBar_Scroll(object sender, EventArgs e)
+        {
+            Player.settings.volume = VolumeBar.Value;
+        }
+        private void NextButton_Click(object sender, EventArgs e)
+        {
+            if (SelectedMusic >= NowPlayList.Items.Count) SelectedMusic = 0;
+
+            PlayLocalMP3(NowPlayListItems[SelectedMusic].URL);
+        }
+        #endregion
+
 
     }
 }
