@@ -1,4 +1,5 @@
 ﻿using HtmlAgilityPack;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Globalization;
 using System.Text;
@@ -6,7 +7,12 @@ using System.Text.RegularExpressions;
 using System.Web;
 namespace MusicPlayer
 {
-    
+    /*
+     * 로그인이 필요한 사이트 -
+     * BGMStore
+     * SoundCloud
+     * 
+     */
 
     class Crawling
     {
@@ -15,25 +21,39 @@ namespace MusicPlayer
             //Melon > Mnet > SoundCloud > etc... > Youtube > MP3Sites=
             MusicInformation[] YoutubeResult = Search_Youtube_Crawling(KeyWord);
             MusicInformation[] BloodCatResult = Search_BloodCat_Crawling(KeyWord);
-            MusicInformation[] BGMStoreResult = Search_BGMStore_Crawling(KeyWord);
-            MusicInformation[] Result = new MusicInformation[9];
+            MusicInformation[] SoundCloudResult = Search_SoundCloud_Crawling(KeyWord);
+            MusicInformation[] BGMStoreResult = MP3_BGMStore_Crawling(KeyWord);
+
+            int AllCount = 0;
+
+            if (YoutubeResult != null) AllCount += YoutubeResult.Length;
+            if (BloodCatResult != null) AllCount += YoutubeResult.Length;
+            if (SoundCloudResult != null) AllCount += YoutubeResult.Length;
+            if (BGMStoreResult != null) AllCount += YoutubeResult.Length;
+
+            MusicInformation[] Result = new MusicInformation[AllCount];
             int Result_Cnt = 0;
+
+            
 
             if(YoutubeResult != null)
             {
-                for (int i = 0; YoutubeResult.Length > i && 3 > i; i++) { Result[Result_Cnt] = YoutubeResult[i]; Result_Cnt++; }
+                for (int i = 0; YoutubeResult.Length != i && 3 > i; i++) { Result[Result_Cnt] = YoutubeResult[i]; Result_Cnt++; }
             }
 
             if(BloodCatResult != null)
             {
-                for (int i = 0; BloodCatResult.Length > i && 3 > i; i++) { Result[Result_Cnt] = BloodCatResult[i]; Result_Cnt++; }
+                for (int i = 0; BloodCatResult.Length != i && 3 > i; i++) { Result[Result_Cnt] = BloodCatResult[i]; Result_Cnt++; }
             }
 
-            if (BGMStoreResult != null)
+            if(BGMStoreResult != null)
             {
-                for (int i = 0; BGMStoreResult.Length > i && 3 > i; i++) { Result[Result_Cnt] = BGMStoreResult[i]; Result_Cnt++; }
+                for (int i = 0; BGMStoreResult.Length != i && 3 > i; i++) { Result[Result_Cnt] = BGMStoreResult[i]; Result_Cnt++; }
             }
-
+            if(SoundCloudResult != null)
+            {
+                for(int i = 0; SoundCloudResult.Length != i && 3 > i; i++) { Result[Result_Cnt] = SoundCloudResult[i]; Result_Cnt++; }
+            }
             return Result;
         }
         public static MusicInformation ID3TagCrawlingResult(string KeyWord)
@@ -144,7 +164,33 @@ namespace MusicPlayer
             return null;
 
         }
-        private static MusicInformation[] Search_BGMStore_Crawling(string KeyWord)
+
+        private static MusicInformation[] Search_SoundCloud_Crawling(string KeyWord)
+        {
+            string JsonStringResult = Utility.GetSource("https://api.soundcloud.com/tracks.json?client_id=a162f1f21992081b0eb58bfd70611886&client_secret=fc82d49acf4b98b64c2287cc9d187be5&q=" + HttpUtility.UrlEncode(KeyWord));
+            JArray JsonArrayResult = JArray.Parse(JsonStringResult);
+
+            MusicInformation[] Result = new MusicInformation[JsonArrayResult.Count];
+            int cnt = 0;
+            foreach (JToken Item in JsonArrayResult)
+            {
+                string Content = Item.ToString();
+
+                Result[cnt].Title = Utility.RegexToStringArr(@"(?<=""title"": "").*.(?="",)", Content, RegexOptions.None)[0];
+                Result[cnt].Artist = Utility.RegexToStringArr(@"(?<=""username"": "").*.(?="",)", Content, RegexOptions.None)[0];
+                Result[cnt].Album = Result[cnt].Title;
+                Result[cnt].Lyricist = null;
+                Result[cnt].AlbumImage = Utility.GetAlbumBitmapImage(Utility.RegexToStringArr(@"(?<=""artwork_url"": "").*.(?="",)", Content, RegexOptions.None)[0]);
+                Result[cnt].URL = Utility.RegexToStringArr(@"(?<=""permalink_url"": "").*.(?="",)", Content, RegexOptions.None)[0];
+                Result[cnt].PlayURL = Utility.RegexToStringArr(@"(?<=""stream_url"": "").*.(?="",)", Content, RegexOptions.None)[0];
+                Result[cnt].PlayTime = int.Parse(Utility.RegexToStringArr(@"(?<=""duration"": ).*.(?=,)", Content, RegexOptions.None)[0]) / 1000;
+
+                cnt++;
+            }
+            return Result;
+        }
+
+        private static MusicInformation[] MP3_BGMStore_Crawling(string KeyWord)
         {
             HtmlDocument doc = new HtmlDocument();
             HtmlNodeCollection nodeCol;
@@ -158,16 +204,18 @@ namespace MusicPlayer
             if (nodeCol != null)
             {
                 Result = new MusicInformation[nodeCol.Count];
-                for(int i = 0; i < nodeCol.Count; i++)
+                for(int i = 0; i < nodeCol.Count && !nodeCol[0].InnerHtml.Contains(@"없습니다."); i++)
                 {
                     lenght = Utility.RegexToStringArr(@"(?<=font-size:10pt;"">\[).*.(?=]</span> )", nodeCol[i].InnerHtml, RegexOptions.None)[0];
-                    Result[i].Title = Utility.RegexToStringArr(@"(?<=mp3/).*(?="">mp3 )", nodeCol[i].InnerHtml, RegexOptions.None)[0];
+                    //Result[i].Title = Utility.RegexToStringArr(@"(?<=mp3/).*(?="">mp3 )", nodeCol[i].InnerHtml, RegexOptions.None)[0];
+                    Result[i].Title = Utility.RegexToStringArr(@"(?<=title"">).*.(?=</a> )", nodeCol[i].InnerHtml, RegexOptions.None)[0];
                     Result[i].Title = HttpUtility.UrlDecode(Result[i].Title);
 
                     Result[i].PlayTime = (int)DateTime.ParseExact(lenght, "mm:ss", CultureInfo.InvariantCulture).TimeOfDay.TotalSeconds;
                     Result[i].Artist = Utility.ExtractSongArtist(Result[i].Title);
                     Result[i].Title = Utility.ExtractSongTitle(Result[i].Title);
-                    Result[i].URL = Utility.RegexToStringArr(@"http://d.*.(?="">mp3)", nodeCol[i].InnerHtml, RegexOptions.None)[0];
+                    Result[i].URL = "http://bgmstore.net" + Utility.RegexToStringArr(@" / view/.*.(?="" class=""title)", nodeCol[i].InnerHtml, RegexOptions.None)[0];
+                    Result[i].PlayURL = Utility.RegexToStringArr(@"http://d.*.(?="">mp3)", nodeCol[i].InnerHtml, RegexOptions.None)[0];
                     Result[i].Lyricist = null;
                     Result[i].AlbumImage = null;
                 }

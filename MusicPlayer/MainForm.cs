@@ -25,6 +25,7 @@ namespace MusicPlayer
         public Bitmap AlbumImage;
         public string URL;
         public int PlayTime;
+        public string PlayURL;
     }
     struct MusicPlayList
     {
@@ -39,11 +40,12 @@ namespace MusicPlayer
         public PictureBox AlbumePicture;
         public Label InformationLabel;
         public TextBox InformationText;
+        public PictureBox AddPlayList;
     }
     public partial class MainForm : Form
     {
         private SearchResult[] MusicItems = new SearchResult[256];
-        private MusicInformation[] MusicInfoItems = new MusicInformation[20];
+        private MusicInformation[] SearchResult = new MusicInformation[20];
         private MusicPlayList[] NowPlayListItems = new MusicPlayList[256];
         private MusicInformation MusicInfo = new MusicInformation();
         private int SelectedMusic = 0;
@@ -56,8 +58,14 @@ namespace MusicPlayer
             InitializeComponent();
         }
         
+
+
+        #region MusicPlay Functions
+
         private bool PlayMusic(string type, string value)
         {
+            string path = Environment.GetEnvironmentVariable("USERPROFILE") + @"\AppData\Local\Temp\";
+            string title = Utility.ExtractSongFileName(MusicInfo);
 
             if (type == "Youtube")
             {
@@ -95,26 +103,20 @@ namespace MusicPlayer
             }
             else if (type == "BloodCat")
             {
-                string path = Environment.GetEnvironmentVariable("USERPROFILE") + @"\AppData\Local\Temp\";
-                string title = Utility.ExtractSongFileName(MusicInfo);
                 Downloader.DownLoadThis(type, value + '\x01' + path, MusicInfo);
                 AddNowPlayList(title, Utility.GetDurationMP3File(path+title));
                 PlayLocalMP3(path + Utility.ExtractSongFileName(MusicInfo));
             }
             else if (type == "BGMStore")
             {
-
                 return true;
             }
             return false;
         }
-
-        #region MusicPlay Functions
-
         private void PlayLocalMP3(string Path)
         {
             MusicInfo = MP3Tag.GetTag(Path);
-            ShowMusicInfo(MusicInfo);
+            ShowMusicInfo();
 
             Player.controls.stop();
             Player = new WindowsMediaPlayer();
@@ -125,9 +127,20 @@ namespace MusicPlayer
 
             SelectedMusic++;
         }
-        private void ShowMusicInfo(MusicInformation MusicInfo_)
+        private void PlayRemoteMP3(string URL)
         {
-            NowPlayInformationText.Text = MusicInfo_.Artist + "\r\n" + MusicInfo_.Album + "\r\n" + MusicInfo_.Title;
+            Player.controls.stop();
+            Player = new WindowsMediaPlayer();
+            Player.URL = URL;
+            Player.controls.play();
+
+            HighLightPlayListItem(SelectedMusic);
+
+            SelectedMusic++;
+        }
+        private void ShowMusicInfo()
+        {
+            NowPlayInformationText.Text = MusicInfo.Artist + "\r\n" + MusicInfo.Album + "\r\n" + MusicInfo.Title;
         }
 
         #endregion
@@ -154,20 +167,23 @@ namespace MusicPlayer
             int Index = Convert.ToInt32(((PictureBox)sender).Name.Trim());
             string indextext = MusicItems[Index].InformationText.Text;
 
+            int urlstartposition = indextext.LastIndexOf("https://");
+            string url = indextext.Remove(0, urlstartposition);
+            
+
             if(indextext.Contains("youtube"))
             {
                 //Youtube Item
-                int urlstartposition = indextext.LastIndexOf("https://");
-                string url = indextext.Remove(0, urlstartposition);
+
 
                 PlayMusic("Youtube", url);
             }
             else if(indextext.Contains("bloodcat"))
-            {
+            {/*
                 //BloodCat Item
                 int urlstartposition = indextext.LastIndexOf("http://");
                 string url = indextext.Remove(0, urlstartposition);
-                
+               */ 
 
                 PlayMusic("BloodCat", url);
             }
@@ -194,6 +210,10 @@ namespace MusicPlayer
                     MusicItems[i].ItemPanel.Top = MusicItems[i].ItemPanel.Top - MusicItems[i].ItemPanel.Height;
                 MusicListBar.Value++;
             }
+        }
+        private void AddPlayList(object sender, MouseEventArgs e)
+        {
+
         }
         private bool RemoveMusicItem()
         {
@@ -223,13 +243,14 @@ namespace MusicPlayer
                 MusicItems[ListCount].AlbumePicture = new PictureBox();
                 MusicItems[ListCount].InformationLabel = new Label();
                 MusicItems[ListCount].InformationText = new TextBox();
-                
+                MusicItems[ListCount].AddPlayList = new PictureBox();
+
                 if (ListCount <= 0) MusicItems[ListCount].ItemPanel.Top = 0;
                 else MusicItems[ListCount].ItemPanel.Top = MusicItems[ListCount - 1].ItemPanel.Top + MusicItems[ListCount - 1].ItemPanel.Height;
                 MusicItems[ListCount].ItemPanel.Left = 0;
                 MusicItems[ListCount].ItemPanel.Width = MusicListBar.Left;
                 MusicItems[ListCount].ItemPanel.Height = 100;
-                MusicItems[ListCount].ItemPanel.BackColor = Color.AntiqueWhite;
+                MusicItems[ListCount].ItemPanel.BackColor = Color.  AntiqueWhite;
                 MusicItems[ListCount].ItemPanel.BorderStyle = BorderStyle.FixedSingle;
                 MusicItems[ListCount].ItemPanel.MouseWheel += new MouseEventHandler(Scrolled);
                 MusicListPanel.Controls.Add(MusicItems[ListCount].ItemPanel);
@@ -243,7 +264,7 @@ namespace MusicPlayer
                 MusicItems[ListCount].AlbumePicture.Name = " " + ListCount + " ";
                 MusicItems[ListCount].AlbumePicture.Image = AlbumImage;
                 MusicItems[ListCount].AlbumePicture.SizeMode = PictureBoxSizeMode.StretchImage;
-                MusicItems[ListCount].AlbumePicture.Click += new EventHandler(MusicItemClicked);
+                MusicItems[ListCount].AlbumePicture.DoubleClick += new EventHandler(MusicItemClicked);
                 MusicItems[ListCount].AlbumePicture.MouseWheel += new MouseEventHandler(Scrolled);
                 MusicItems[ListCount].ItemPanel.Controls.Add(MusicItems[ListCount].AlbumePicture);
 
@@ -254,6 +275,12 @@ namespace MusicPlayer
                 MusicItems[ListCount].InformationLabel.TextAlign = ContentAlignment.TopRight;
                 MusicItems[ListCount].InformationLabel.MouseWheel += new MouseEventHandler(Scrolled);
                 MusicItems[ListCount].ItemPanel.Controls.Add(MusicItems[ListCount].InformationLabel);
+
+                MusicItems[ListCount].AddPlayList.Dock = DockStyle.Right;
+                MusicItems[ListCount].AddPlayList.Width = 50;
+                MusicItems[ListCount].AddPlayList.Image = Properties.Resources.AddPlayList;
+                MusicItems[ListCount].AddPlayList.MouseClick += new MouseEventHandler(AddPlayList);
+                MusicItems[ListCount].ItemPanel.Controls.Add(MusicItems[ListCount].AddPlayList);
 
                 MusicItems[ListCount].InformationText.Left = MusicItems[ListCount].InformationLabel.Left + MusicItems[ListCount].InformationLabel.Width + 5;
                 MusicItems[ListCount].InformationText.Top = MusicItems[ListCount].InformationLabel.Top + 1;
@@ -266,7 +293,9 @@ namespace MusicPlayer
                 MusicItems[ListCount].InformationText.ReadOnly = true;
                 MusicItems[ListCount].InformationText.MouseWheel += new MouseEventHandler(Scrolled);
                 MusicItems[ListCount].ItemPanel.Controls.Add(MusicItems[ListCount].InformationText);
-                
+
+
+
                 ListCount++;
                 return true;
             }
@@ -279,25 +308,25 @@ namespace MusicPlayer
         }
         private void HighLightPlayListItem(int Index)
         {
-            for(int i = 0; NowPlayList.Items.Count > i;i++)
+            for(int i = 0; NowPlayListView.Items.Count > i;i++)
             {
-                if(NowPlayList.Items[i].BackColor == Color.Black)
+                if(NowPlayListView.Items[i].BackColor == Color.Black)
                 {
-                    NowPlayList.Items[i].BackColor = Color.White;
-                    NowPlayList.Items[i].ForeColor = Color.Black;
+                    NowPlayListView.Items[i].BackColor = Color.White;
+                    NowPlayListView.Items[i].ForeColor = Color.Black;
                 }
             }
-            NowPlayList.Items[Index].ForeColor = Color.LightGoldenrodYellow;
-            NowPlayList.Items[Index].BackColor = Color.Black;
+            NowPlayListView.Items[Index].ForeColor = Color.LightGoldenrodYellow;
+            NowPlayListView.Items[Index].BackColor = Color.Black;
         }
         private void UnHighLightPlayListItem()
         {
-            for (int i = 0; NowPlayList.Items.Count > i; i++)
+            for (int i = 0; NowPlayListView.Items.Count > i; i++)
             {
-                if (NowPlayList.Items[i].BackColor == Color.Black)
+                if (NowPlayListView.Items[i].BackColor == Color.Black)
                 {
-                    NowPlayList.Items[i].BackColor = Color.White;
-                    NowPlayList.Items[i].ForeColor = Color.Black;
+                    NowPlayListView.Items[i].BackColor = Color.White;
+                    NowPlayListView.Items[i].ForeColor = Color.Black;
                 }
             }
         }
@@ -306,13 +335,13 @@ namespace MusicPlayer
             ListViewItem item = new ListViewItem();
             string lenght = TimeSpan.FromSeconds((double)SongLenght).ToString(@"mm\:ss");
 
-            item.Text = (NowPlayList.Items.Count+1).ToString();
+            item.Text = (NowPlayListView.Items.Count+1).ToString();
 
             item.SubItems.Add(Title);
             item.SubItems.Add(lenght);
-            NowPlayList.Items.Add(item);
+            NowPlayListView.Items.Add(item);
         }
-
+        
         //*******************************************
         //*           Controls Events               *
         //*******************************************
@@ -350,19 +379,19 @@ namespace MusicPlayer
         {
             if(SearchText.Text != "Search Here... (~￣▽￣)~")
             {
-                MusicInfoItems = Crawling.SearchCrawlingResult(SearchText.Text);
-                for (int i = 0; (MusicInfoItems.Length) > i; i++)
+                SearchResult = Crawling.SearchCrawlingResult(SearchText.Text);
+                for (int i = 0; (SearchResult.Length) > i; i++)
                     CreateMusicItem(
-                        MusicInfoItems[i].Title,
-                        MusicInfoItems[i].Artist,
-                        MusicInfoItems[i].Album,
-                        MusicInfoItems[i].AlbumImage,
-                        MusicInfoItems[i].URL);
+                        SearchResult[i].Title,
+                        SearchResult[i].Artist,
+                        SearchResult[i].Album,
+                        SearchResult[i].AlbumImage,
+                        SearchResult[i].URL);
                 MusicListBar.Maximum = ListCount;
                 MusicListBar.Value = 0;
             }
             MusicInfo = Crawling.ID3TagCrawlingResult(SearchText.Text);
-            if (MusicInfo.Title == null) MusicInfo = MusicInfoItems[0];
+            if (MusicInfo.Title == null) MusicInfo = SearchResult[0];
         }
         private void TitlebarPanel_MouseDown(object sender, MouseEventArgs e)
         {
@@ -404,7 +433,7 @@ namespace MusicPlayer
                 SongLenghtBar.Value = (int)Player.controls.currentPosition;
                 if (SongLenghtBar.Maximum == SongLenghtBar.Value && SongLenghtBar.Maximum != 0)
                 {
-                    if (NowPlayList.Items.Count > SelectedMusic) PlayLocalMP3(NowPlayListItems[SelectedMusic].URL);
+                    if (NowPlayListView.Items.Count > SelectedMusic) PlayLocalMP3(NowPlayListItems[SelectedMusic].URL);
                     else { Player.controls.stop(); UnHighLightPlayListItem(); NowPlayInformationText.Text = ""; SelectedMusic = 0; }
                 }
             }
@@ -418,11 +447,11 @@ namespace MusicPlayer
                 Array.Sort(file);
                 foreach (string str in file)
                 {
-                    ListViewItem PlayListItem = new ListViewItem((NowPlayList.Items.Count + 1).ToString());
+                    ListViewItem PlayListItem = new ListViewItem((NowPlayListView.Items.Count + 1).ToString());
                     PlayListItem.SubItems.Add(Path.GetFileName(str));
                     PlayListItem.SubItems.Add("[??:??]");
 
-                    NowPlayList.Items.Add(PlayListItem);
+                    NowPlayListView.Items.Add(PlayListItem);
 
                     NowPlayListItems[i].Number = i;
                     NowPlayListItems[i].TItle = Path.GetFileName(str);
@@ -441,7 +470,7 @@ namespace MusicPlayer
         }
         private void NowPlayList_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            SelectedMusic = Convert.ToInt32(NowPlayList.FocusedItem.SubItems[0].Text) - 1;
+            SelectedMusic = Convert.ToInt32(NowPlayListView.FocusedItem.SubItems[0].Text) - 1;
             PlayButton_Click(sender,e);
         }
         private void PlayButton_Click(object sender, EventArgs e)
@@ -479,10 +508,11 @@ namespace MusicPlayer
         }
         private void NextButton_Click(object sender, EventArgs e)
         {
-            if (SelectedMusic >= NowPlayList.Items.Count) SelectedMusic = 0;
+            if (SelectedMusic >= NowPlayListView.Items.Count) SelectedMusic = 0;
 
             PlayLocalMP3(NowPlayListItems[SelectedMusic].URL);
         }
+
         #endregion
 
 

@@ -85,6 +85,12 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MP3Tag.cs" />
+    <Compile Include="MusicItem.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MusicItem.Designer.cs">
+      <DependentUpon>MusicItem.cs</DependentUpon>
+    </Compile>
     <Compile Include="Playlist.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -97,6 +103,9 @@
     <Compile Include="Utility.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MusicItem.resx">
+      <DependentUpon>MusicItem.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -124,6 +133,7 @@
     <None Include="Images\Volume.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Images\AddPlayList.png" />
     <Content Include="Images\AllRepeat.png" />
     <Content Include="Images\Close.png" />
     <Content Include="Images\Home.png" />
@@ -145,11 +155,11 @@
     <Content Include="Librarys\IdSharp.Tagging.dll" />
     <Content Include="Librarys\YoutubeExtractor.dll" />
     <Content Include="Librarys\zlib.net.dll" />
-    <None Include="Resources\Shuffle.png" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

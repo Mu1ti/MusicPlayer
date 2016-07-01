@@ -55,7 +55,7 @@
             this.PlayListControlPanel = new System.Windows.Forms.Panel();
             this.NowPlayListDownloadButton = new System.Windows.Forms.Button();
             this.NowPlayListRemoveButton = new System.Windows.Forms.Button();
-            this.NowPlayList = new System.Windows.Forms.ListView();
+            this.NowPlayListView = new System.Windows.Forms.ListView();
             this.NowPlaylistNumber = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.NowPlaylistTitle = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.NowPlaylistLenght = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -354,7 +354,7 @@
             // NowPlaylistTab
             // 
             this.NowPlaylistTab.Controls.Add(this.PlayListControlPanel);
-            this.NowPlaylistTab.Controls.Add(this.NowPlayList);
+            this.NowPlaylistTab.Controls.Add(this.NowPlayListView);
             this.NowPlaylistTab.Location = new System.Drawing.Point(4, 34);
             this.NowPlaylistTab.Name = "NowPlaylistTab";
             this.NowPlaylistTab.Padding = new System.Windows.Forms.Padding(3);
@@ -391,26 +391,26 @@
             this.NowPlayListRemoveButton.Text = "Remove";
             this.NowPlayListRemoveButton.UseVisualStyleBackColor = true;
             // 
-            // NowPlayList
+            // NowPlayListView
             // 
-            this.NowPlayList.AllowDrop = true;
-            this.NowPlayList.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.NowPlayList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.NowPlayListView.AllowDrop = true;
+            this.NowPlayListView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.NowPlayListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.NowPlaylistNumber,
             this.NowPlaylistTitle,
             this.NowPlaylistLenght});
-            this.NowPlayList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.NowPlayList.FullRowSelect = true;
-            this.NowPlayList.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.NowPlayList.Location = new System.Drawing.Point(3, 3);
-            this.NowPlayList.Name = "NowPlayList";
-            this.NowPlayList.Size = new System.Drawing.Size(286, 430);
-            this.NowPlayList.TabIndex = 2;
-            this.NowPlayList.UseCompatibleStateImageBehavior = false;
-            this.NowPlayList.View = System.Windows.Forms.View.Details;
-            this.NowPlayList.DragDrop += new System.Windows.Forms.DragEventHandler(this.NowPlayList_DragDrop);
-            this.NowPlayList.DragEnter += new System.Windows.Forms.DragEventHandler(this.NowPlayList_DragEnter);
-            this.NowPlayList.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.NowPlayList_MouseDoubleClick);
+            this.NowPlayListView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.NowPlayListView.FullRowSelect = true;
+            this.NowPlayListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.NowPlayListView.Location = new System.Drawing.Point(3, 3);
+            this.NowPlayListView.Name = "NowPlayListView";
+            this.NowPlayListView.Size = new System.Drawing.Size(286, 430);
+            this.NowPlayListView.TabIndex = 2;
+            this.NowPlayListView.UseCompatibleStateImageBehavior = false;
+            this.NowPlayListView.View = System.Windows.Forms.View.Details;
+            this.NowPlayListView.DragDrop += new System.Windows.Forms.DragEventHandler(this.NowPlayList_DragDrop);
+            this.NowPlayListView.DragEnter += new System.Windows.Forms.DragEventHandler(this.NowPlayList_DragEnter);
+            this.NowPlayListView.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.NowPlayList_MouseDoubleClick);
             // 
             // NowPlaylistNumber
             // 
@@ -725,7 +725,7 @@
         private System.Windows.Forms.Panel MusicListPanel;
         private System.Windows.Forms.VScrollBar MusicListBar;
         private System.Windows.Forms.TabPage SettingTabPage;
-        private System.Windows.Forms.ListView NowPlayList;
+        private System.Windows.Forms.ListView NowPlayListView;
         private System.Windows.Forms.Panel PlayListControlPanel;
         private System.Windows.Forms.Button NowPlayListDownloadButton;
         private System.Windows.Forms.Button NowPlayListRemoveButton;
